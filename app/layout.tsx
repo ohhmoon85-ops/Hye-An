@@ -33,9 +33,9 @@ export const metadata: Metadata = {
     default: `${SITE.name} · ${SITE.description}`,
     template: `%s · ${SITE.name}`,
   },
-  description: `${SITE.tagline}. ${SITE.author}이 쓰는 ${SITE.description}.`,
+  description: `${SITE.tagline}. ${SITE.description}.`,
   applicationName: SITE.name,
-  authors: [{ name: SITE.author }],
+  authors: [{ name: SITE.name }],
   keywords: ['국제정세', '안보전략', '한미동맹', '국방정책', '지정학', 'HYEAN'],
   alternates: { canonical: '/' },
   openGraph: {

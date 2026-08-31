@@ -14,8 +14,8 @@ export default function AboutPage() {
     <div className="mx-auto max-w-5xl px-5">
       <PageHeader
         label="About"
-        title="이름을 걸고 쓴다"
-        description="안보·국제정세 정보는 공짜로 넘친다. 사람들이 값을 치르는 지점은 정보가 아니라 판단이다. 이 저널은 익명의 자료실이 아니라 기명(記名)의 판단을 지향한다."
+        title="판단을 적는다"
+        description="안보·국제정세 정보는 공짜로 넘친다. 사람들이 값을 치르는 지점은 정보가 아니라 판단이다. 이 저널은 자료를 쌓아두는 곳이 아니라, 근거를 밝혀 판단을 적는 곳을 지향한다."
       />
 
       <div className="max-w-(--measure) space-y-12 pb-8">
@@ -24,12 +24,12 @@ export default function AboutPage() {
             <Seal size={46} className="mt-1 shrink-0" />
             <div>
               <h2 className="font-serif text-xl font-bold">
-                {SITE.author} <span className="text-base font-normal text-ink-soft">{SITE.authorTitle}</span>
+                {SITE.name} <span className="text-base font-normal text-ink-faint">{SITE.nameHanja}</span>
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                야전과 정책 부서를 오가며 쌓은 경력을 토대로 한미동맹·미국 국가전략·미중
-                패권경쟁·전쟁 사례를 분석한다. 사건의 나열이 아니라 그 아래 놓인 구조를 읽는 데
-                목적을 둔다.
+                혜안(慧眼)은 사물의 본질을 꿰뚫어 보는 눈이다. 한미동맹·미국 국가전략·미중
+                패권경쟁·전쟁 사례를 다루되, 사건을 나열하는 매체가 아니라 그 아래 놓인 구조를
+                읽는 매체를 지향한다.
               </p>
             </div>
           </div>
@@ -41,7 +41,7 @@ export default function AboutPage() {
           </h2>
           <ol className="prose">
             <li>
-              <strong>공개 출처만 인용한다.</strong> 현직 경력에서 얻은 비공개 정보는 어떤 형태로도
+              <strong>공개 출처만 인용한다.</strong> 직무상 알게 된 비공개 정보는 어떤 형태로도
               사용하지 않는다. 모든 문건의 근거자료는 출처를 명시한다.
             </li>
             <li>
@@ -54,7 +54,7 @@ export default function AboutPage() {
             </li>
             <li>
               <strong>작성 방법을 표기한다.</strong> 생성형 AI의 보조를 받은 문건은 그 사실을 문건
-              하단에 적는다. 최종 판단과 검증의 책임은 저자에게 있다.
+              하단에 적는다. 최종 판단과 검증의 책임은 {SITE.name}에 있다.
             </li>
             <li>
               <strong>편집 독립.</strong> 협찬·스폰서 콘텐츠는 그 사실을 문건 상단에 명시하며,
@@ -74,7 +74,7 @@ export default function AboutPage() {
             </p>
             <ul>
               <li>본문 전재(全載)는 사전 서면 동의를 받는다. 요약과 부분 인용은 자유롭다.</li>
-              <li>인용 시 저자명·문서번호·발행일과 원문 링크를 함께 표기한다.</li>
+              <li>인용 시 매체명·문서번호·발행일과 원문 링크를 함께 표기한다.</li>
               <li>맥락을 바꾸는 발췌는 하지 않는다.</li>
             </ul>
           </div>
@@ -102,8 +102,8 @@ export default function AboutPage() {
           </h2>
           <div className="prose">
             <p>
-              문건마다 저작권 지위가 다르다. 저자 본인이 쓴 분석보고서(A등급)와 미 정부가 공개한
-              원문(B등급)만 공개하며, 타인 명의 저작물(C등급)은 권리자의 서면 동의를 확보하기 전까지
+              문건마다 저작권 지위가 다르다. {SITE.name}이 직접 쓴 분석보고서(A등급)와 미 정부가
+              공개한 원문(B등급)만 공개하며, 타인 명의 저작물(C등급)은 권리자의 서면 동의를 받기 전까지
               공개하지 않는다. 내부 문서(D등급)는 공개 대상이 아니다.
             </p>
           </div>

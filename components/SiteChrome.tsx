@@ -79,8 +79,7 @@ export function SiteFooter() {
         </div>
 
         <p className="mt-8 border-t border-rule pt-5 font-mono text-[0.65rem] leading-relaxed text-ink-faint">
-          © {new Date().getFullYear()} {SITE.name} · {SITE.author}. 모든 문건의 저작권은 저자에게
-          있다.
+          © {new Date().getFullYear()} {SITE.name}. 모든 문건의 저작권은 {SITE.name}에 있다.
           <br />
           {/* 통신판매업 신고번호는 신고 완료 후 이곳에 표기한다 (오픈 전 필수) */}
         </p>

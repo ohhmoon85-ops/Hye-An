@@ -37,11 +37,8 @@ export default async function HomePage() {
                 {SITE.tagline}
               </h1>
               <p className="mt-3 max-w-(--measure) leading-relaxed text-ink-soft">
-                {SITE.description}. 사건을 나열하지 않는다. 그 아래 놓인 구조를 읽고, 이름을 걸고
+                {SITE.description}. 사건을 나열하지 않는다. 그 아래 놓인 구조를 읽고, 근거를 밝혀
                 판단을 적는다.
-              </p>
-              <p className="mt-4 font-mono text-xs tracking-wide text-ink-faint">
-                {SITE.author} · {SITE.authorTitle}
               </p>
             </div>
           </div>

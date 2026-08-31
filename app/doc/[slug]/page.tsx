@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       description: toPlainText(doc.summary_md, 155),
       url: absoluteUrl(`/doc/${doc.slug}`),
       publishedTime: doc.published_at ?? undefined,
-      authors: [SITE.author],
+      authors: [SITE.name],
       tags: doc.tags,
     },
   }
@@ -77,10 +77,11 @@ export default async function DocumentPage({ params }: Params) {
             {doc.subtitle}
           </p>
         )}
-        <p className="mt-5 font-mono text-xs text-ink-faint">
-          {SITE.author} · {SITE.authorTitle}
-          {doc.published_at && ` · ${formatDate(doc.published_at)} 작성`}
-        </p>
+        {doc.published_at && (
+          <p className="mt-5 font-mono text-xs text-ink-faint">
+            {formatDate(doc.published_at)} 작성
+          </p>
+        )}
       </header>
 
       {(restricted || unpublished) && (
@@ -163,8 +164,8 @@ function Citation({ doc }: { doc: Awaited<ReturnType<typeof getDocumentBySlug>> 
     <div className="border border-rule bg-surface-sunken px-4 py-3">
       <p className="font-mono text-[0.65rem] tracking-wide text-ink-faint uppercase">인용 서식</p>
       <p className="mt-1.5 font-mono text-[0.72rem] leading-relaxed break-words text-ink-soft">
-        {SITE.author}. ({year}). 「{doc.title}」. {SITE.name}
-        {doc.doc_no ? ` ${doc.doc_no}` : ''}. {absoluteUrl(`/doc/${doc.slug}`)}
+        {SITE.name}. ({year}). 「{doc.title}」
+        {doc.doc_no ? `. ${doc.doc_no}` : ''}. {absoluteUrl(`/doc/${doc.slug}`)}
       </p>
     </div>
   )
@@ -189,7 +190,8 @@ function JsonLd({
     description: toPlainText(doc.summary_md, 200),
     datePublished: doc.published_at ? isoDate(doc.published_at) : undefined,
     inLanguage: 'ko',
-    author: { '@type': 'Person', name: SITE.author, jobTitle: SITE.authorTitle },
+    // 개인이 아니라 매체가 서명한다.
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
     publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
     mainEntityOfPage: { '@type': 'WebPage', '@id': absoluteUrl(`/doc/${doc.slug}`) },
     articleSection: doc.categories?.name_ko,
