@@ -1,0 +1,1000 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>*{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>혜안 플랫폼 기획서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F2F4F1; --surface:#FFFFFF; --surface-2:#E8ECE8; --surface-3:#DDE4DF;
+  --ink:#141E1C; --ink-2:#4C5A57; --ink-3:#7C8985;
+  --rule:#D3DAD5; --rule-2:#C0CAC4;
+  --accent:#1D4E46; --accent-soft:#E0EBE6;
+  --brass:#8C6D33; --brass-soft:#F1E8D4;
+  --ok:#2F6B4F; --ok-bg:#E2EFE7;
+  --warn:#8A6318; --warn-bg:#F6EDD8;
+  --crit:#8C3A2E; --crit-bg:#F6E3DF;
+  --shadow:0 1px 2px rgba(20,30,28,.05), 0 8px 24px -16px rgba(20,30,28,.24);
+  --serif:"Gowun Batang", "Nanum Myeongjo", "Apple SD Gothic Neo", serif;
+  --sans:"IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", "SFMono-Regular", ui-monospace, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1312; --surface:#151D1B; --surface-2:#1C2523; --surface-3:#26302D;
+    --ink:#E8ECE9; --ink-2:#A3B0AC; --ink-3:#76837F;
+    --rule:#26312E; --rule-2:#33403C;
+    --accent:#5FA898; --accent-soft:#17302C;
+    --brass:#CBA765; --brass-soft:#2B2418;
+    --ok:#63AC81; --ok-bg:#16291F;
+    --warn:#C9A44E; --warn-bg:#2A2312;
+    --crit:#D27C6E; --crit-bg:#2E1B18;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 28px -18px rgba(0,0,0,.8);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1312; --surface:#151D1B; --surface-2:#1C2523; --surface-3:#26302D;
+  --ink:#E8ECE9; --ink-2:#A3B0AC; --ink-3:#76837F;
+  --rule:#26312E; --rule-2:#33403C;
+  --accent:#5FA898; --accent-soft:#17302C;
+  --brass:#CBA765; --brass-soft:#2B2418;
+  --ok:#63AC81; --ok-bg:#16291F;
+  --warn:#C9A44E; --warn-bg:#2A2312;
+  --crit:#D27C6E; --crit-bg:#2E1B18;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 28px -18px rgba(0,0,0,.8);
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-weight:300; font-size:16px; line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--brass-soft); color:var(--ink)}
+a{color:var(--accent); text-underline-offset:3px; text-decoration-thickness:1px}
+a:focus-visible, button:focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:2px}
+
+/* ---------- masthead ---------- */
+.mast{
+  border-bottom:1px solid var(--rule); background:var(--surface);
+  padding:44px 24px 36px;
+}
+.mast-in{max-width:1180px; margin:0 auto; display:flex; gap:28px; align-items:flex-start; flex-wrap:wrap}
+.seal{
+  flex:none; width:64px; height:64px; border:1.5px solid var(--brass); border-radius:3px;
+  display:grid; place-items:center; color:var(--brass);
+  font-family:var(--serif); font-weight:700; font-size:19px; line-height:1.05; letter-spacing:.04em;
+  text-align:center; background:var(--brass-soft);
+}
+.mast-txt{flex:1 1 320px; min-width:0}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 10px;
+}
+h1{
+  font-family:var(--serif); font-weight:700; font-size:clamp(30px,5.2vw,44px);
+  line-height:1.2; margin:0 0 8px; letter-spacing:-.01em; text-wrap:balance;
+}
+.sub{margin:0; color:var(--ink-2); font-size:17px; max-width:60ch}
+.meta{
+  margin:22px 0 0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:8px 20px;
+  font-family:var(--mono); font-size:12px; color:var(--ink-3);
+}
+.meta b{color:var(--ink-2); font-weight:500}
+.themetog{
+  flex:none; margin-left:auto; border:1px solid var(--rule-2); background:var(--surface);
+  color:var(--ink-2); font-family:var(--mono); font-size:11px; letter-spacing:.08em;
+  padding:7px 12px; border-radius:2px; cursor:pointer;
+}
+.themetog:hover{border-color:var(--brass); color:var(--brass)}
+
+/* ---------- shell ---------- */
+.shell{max-width:1180px; margin:0 auto; padding:0 24px 96px; display:grid; gap:56px;
+  grid-template-columns:216px minmax(0,1fr);}
+@media (max-width:900px){ .shell{grid-template-columns:minmax(0,1fr); gap:0} }
+
+nav.toc{position:sticky; top:24px; align-self:start; padding-top:48px;
+  font-family:var(--mono); font-size:12px; line-height:1.5;}
+nav.toc ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+nav.toc a{display:flex; gap:10px; padding:5px 8px; color:var(--ink-3); text-decoration:none; border-radius:2px}
+nav.toc a span{color:var(--rule-2); flex:none}
+nav.toc a:hover{background:var(--surface-2); color:var(--ink)}
+nav.toc a.on{color:var(--brass); background:var(--brass-soft)}
+nav.toc a.on span{color:var(--brass)}
+@media (max-width:900px){
+  nav.toc{position:sticky; top:0; z-index:20; padding:10px 0; margin:0 -24px;
+    background:var(--ground); border-bottom:1px solid var(--rule);}
+  nav.toc ol{flex-direction:row; overflow-x:auto; padding:0 24px; gap:4px; scrollbar-width:none}
+  nav.toc ol::-webkit-scrollbar{display:none}
+  nav.toc a{white-space:nowrap; border:1px solid var(--rule); padding:5px 10px}
+}
+
+main{padding-top:48px; min-width:0}
+section{scroll-margin-top:72px; padding-bottom:60px}
+section + section{border-top:1px solid var(--rule); padding-top:52px}
+
+.snum{font-family:var(--mono); font-size:12px; letter-spacing:.14em; color:var(--brass); display:block; margin-bottom:8px}
+h2{font-family:var(--serif); font-weight:700; font-size:clamp(23px,3.4vw,30px); line-height:1.3;
+  margin:0 0 6px; letter-spacing:-.01em; text-wrap:balance}
+.lede{color:var(--ink-2); font-size:16.5px; margin:0 0 30px; max-width:64ch}
+h3{font-family:var(--sans); font-weight:600; font-size:16px; letter-spacing:.01em;
+  margin:38px 0 12px; color:var(--ink); display:flex; align-items:baseline; gap:9px}
+h3::before{content:""; width:14px; height:1px; background:var(--brass); flex:none; transform:translateY(-4px)}
+h4{font-family:var(--mono); font-weight:500; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); margin:26px 0 10px}
+p{margin:0 0 15px; max-width:68ch}
+ul,ol{margin:0 0 16px; padding-left:20px; max-width:68ch}
+li{margin-bottom:6px}
+li::marker{color:var(--brass)}
+strong{font-weight:600; color:var(--ink)}
+code{font-family:var(--mono); font-size:.87em; background:var(--surface-2); padding:1px 5px; border-radius:2px; color:var(--ink)}
+
+/* ---------- components ---------- */
+.tiles{display:grid; gap:1px; background:var(--rule); border:1px solid var(--rule);
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); margin:0 0 30px}
+.tile{background:var(--surface); padding:18px 18px 16px}
+.tile .k{font-family:var(--mono); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3)}
+.tile .v{font-family:var(--serif); font-weight:700; font-size:26px; line-height:1.2; margin-top:6px;
+  color:var(--ink); font-variant-numeric:tabular-nums}
+.tile .v small{font-size:14px; font-family:var(--sans); font-weight:400; color:var(--ink-2)}
+.tile .n{font-size:12.5px; color:var(--ink-3); margin-top:3px; line-height:1.5}
+
+.panel{background:var(--surface); border:1px solid var(--rule); padding:22px 24px; margin:0 0 24px;
+  box-shadow:var(--shadow); border-radius:2px}
+.panel > :last-child{margin-bottom:0}
+.panel.quiet{box-shadow:none; background:var(--surface-2); border-color:var(--rule)}
+.panel.mark{border-left:2px solid var(--brass)}
+
+.scroller{overflow-x:auto; margin:0 0 24px; border:1px solid var(--rule); background:var(--surface); border-radius:2px}
+table{border-collapse:collapse; width:100%; font-size:14px; min-width:520px}
+th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--rule); vertical-align:top; line-height:1.6}
+thead th{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--ink-3); background:var(--surface-2); font-weight:500; white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-variant-numeric:tabular-nums; white-space:nowrap}
+td.mono, th.mono{font-family:var(--mono); font-size:12.5px}
+
+.pill{display:inline-block; font-family:var(--mono); font-size:10.5px; letter-spacing:.08em;
+  padding:2px 7px; border-radius:2px; white-space:nowrap; font-weight:500}
+.pill.a{background:var(--ok-bg); color:var(--ok)}
+.pill.b{background:var(--accent-soft); color:var(--accent)}
+.pill.c{background:var(--warn-bg); color:var(--warn)}
+.pill.d{background:var(--crit-bg); color:var(--crit)}
+
+.cols{display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); margin:0 0 24px}
+.card{background:var(--surface); border:1px solid var(--rule); padding:18px; border-radius:2px}
+.card h5{margin:0 0 6px; font-size:14.5px; font-weight:600; font-family:var(--sans)}
+.card p{font-size:13.5px; color:var(--ink-2); margin:0}
+.card .tag{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; color:var(--brass); display:block; margin-bottom:8px}
+
+/* plan cards */
+.plans{display:grid; gap:0; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  border:1px solid var(--rule); background:var(--rule); margin:0 0 24px}
+.plan{background:var(--surface); padding:22px 20px}
+.plan.hero{background:var(--accent-soft)}
+.plan .nm{font-family:var(--serif); font-size:19px; font-weight:700}
+.plan .pr{font-family:var(--mono); font-size:22px; margin:10px 0 2px; color:var(--brass); font-variant-numeric:tabular-nums}
+.plan .pr small{font-size:12px; color:var(--ink-3); font-family:var(--sans)}
+.plan ul{list-style:none; padding:0; margin:14px 0 0; font-size:13.5px; color:var(--ink-2)}
+.plan li{padding-left:15px; position:relative; margin-bottom:7px; line-height:1.55}
+.plan li::before{content:"—"; position:absolute; left:0; color:var(--brass)}
+
+/* wireframes */
+.wires{display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); margin:0 0 24px}
+.wire{border:1px solid var(--rule-2); background:var(--surface); border-radius:3px; overflow:hidden}
+.wire .bar{display:flex; align-items:center; gap:6px; padding:8px 10px; background:var(--surface-2);
+  border-bottom:1px solid var(--rule); font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+.wire .bar i{width:6px; height:6px; border-radius:50%; background:var(--rule-2); flex:none}
+.wire .body{padding:12px; display:flex; flex-direction:column; gap:7px}
+.blk{background:var(--surface-2); border-radius:2px; height:11px}
+.blk.t{background:var(--surface-3); height:15px}
+.blk.acc{background:var(--accent); opacity:.72}
+.blk.br{background:var(--brass); opacity:.62}
+.blk.lock{background:repeating-linear-gradient(135deg,var(--surface-2),var(--surface-2) 5px,var(--surface-3) 5px,var(--surface-3) 10px); height:44px; display:grid; place-items:center;
+  font-family:var(--mono); font-size:10px; color:var(--ink-3); letter-spacing:.08em}
+.row{display:flex; gap:7px}
+.row > *{flex:1}
+.wcap{font-family:var(--mono); font-size:11px; color:var(--ink-3); padding:0 12px 12px; line-height:1.5}
+.wcap b{color:var(--ink-2); font-weight:500; display:block; margin-bottom:2px; letter-spacing:.06em}
+
+/* steps */
+.steps{counter-reset:s; list-style:none; padding:0; margin:0 0 24px; display:flex; flex-direction:column; gap:0;
+  border:1px solid var(--rule); background:var(--surface); border-radius:2px}
+.steps li{counter-increment:s; display:flex; gap:14px; padding:14px 18px; margin:0;
+  border-bottom:1px solid var(--rule); font-size:14px; line-height:1.6}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(s,decimal-leading-zero); font-family:var(--mono); font-size:11px;
+  color:var(--brass); flex:none; padding-top:3px; letter-spacing:.05em}
+.steps b{display:block; font-weight:600; margin-bottom:1px}
+.steps span{color:var(--ink-2); font-size:13.5px}
+
+/* diagram */
+.diagram{border:1px solid var(--rule); background:var(--surface); border-radius:2px; padding:20px; margin:0 0 12px; overflow-x:auto}
+.diagram svg{display:block; width:100%; min-width:520px; height:auto}
+.dcap{font-size:12.5px; color:var(--ink-3); margin:-4px 0 26px; font-family:var(--mono)}
+
+pre.code{font-family:var(--mono); font-size:12.5px; line-height:1.65; background:var(--surface);
+  border:1px solid var(--rule); border-left:2px solid var(--accent); padding:16px 18px; overflow-x:auto;
+  margin:0 0 22px; border-radius:2px; color:var(--ink-2); white-space:pre}
+pre.code b{color:var(--ink); font-weight:500}
+pre.code i{color:var(--ink-3); font-style:normal}
+
+.note{border-left:2px solid var(--brass); background:var(--brass-soft); padding:14px 18px; margin:0 0 24px;
+  font-size:14px; color:var(--ink-2); border-radius:0 2px 2px 0}
+.note b{color:var(--ink)}
+.note.risk{border-color:var(--crit); background:var(--crit-bg)}
+
+footer{border-top:1px solid var(--rule); background:var(--surface); padding:32px 24px 60px;
+  font-family:var(--mono); font-size:12px; color:var(--ink-3)}
+footer div{max-width:1180px; margin:0 auto; display:flex; flex-wrap:wrap; gap:8px 24px; justify-content:space-between}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="mast-in">
+    <div class="seal" aria-hidden="true">慧眼</div>
+    <div class="mast-txt">
+      <p class="eyebrow">서비스 구축 기획서 · Rev. 1.0</p>
+      <h1>혜안 <span style="color:var(--brass); font-size:.62em; letter-spacing:.06em; font-family:var(--mono)">HYEAN</span></h1>
+      <p class="sub">국제정세·안보전략 분석 아카이브를 유료 구독 플랫폼으로 전환하기 위한 브랜드·구조·기술·수익 설계안</p>
+      <ul class="meta">
+        <li>작성 <b>2026.08.31</b></li>
+        <li>기반 자산 <b>문건 253건 / 12개 대분류</b></li>
+        <li>스택 <b>Next.js · Vercel · Supabase</b></li>
+        <li>도메인(안) <b>hyean.kr</b></li>
+      </ul>
+    </div>
+    <button class="themetog" id="tt" type="button">DARK / LIGHT</button>
+  </div>
+</header>
+
+<div class="shell">
+<nav class="toc" aria-label="목차">
+  <ol>
+    <li><a href="#s1"><span>01</span>기획 요약</a></li>
+    <li><a href="#s2"><span>02</span>브랜드 체계</a></li>
+    <li><a href="#s3"><span>03</span>독자와 가치</a></li>
+    <li><a href="#s4"><span>04</span>콘텐츠 전략</a></li>
+    <li><a href="#s5"><span>05</span>정보구조·화면</a></li>
+    <li><a href="#s6"><span>06</span>수익모델</a></li>
+    <li><a href="#s7"><span>07</span>기술 아키텍처</a></li>
+    <li><a href="#s8"><span>08</span>데이터 모델</a></li>
+    <li><a href="#s9"><span>09</span>콘텐츠 보호</a></li>
+    <li><a href="#s10"><span>10</span>결제 설계</a></li>
+    <li><a href="#s11"><span>11</span>법무·리스크</a></li>
+    <li><a href="#s12"><span>12</span>로드맵·비용</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- 01 -->
+<section id="s1">
+  <span class="snum">01</span>
+  <h2>기획 요약</h2>
+  <p class="lede">이미 축적된 253건의 전략 분석 문건을 “폴더”가 아니라 “발행물”로 바꾸는 일입니다. 핵심은 새 콘텐츠를 만드는 것이 아니라, 있는 자산에 <strong>발견 가능성·신뢰 표식·과금 경로</strong>를 입히는 것입니다.</p>
+
+  <div class="tiles">
+    <div class="tile"><div class="k">초기 카탈로그</div><div class="v">253<small> 건</small></div><div class="n">본인 저작 분석보고서 중심 선별 후 순차 공개</div></div>
+    <div class="tile"><div class="k">발행 주기 목표</div><div class="v">주 1~2<small> 건</small></div><div class="n">현안 발생 시 48시간 내 브리프</div></div>
+    <div class="tile"><div class="k">개인 구독가(안)</div><div class="v">12,900<small> 원/월</small></div><div class="n">연간 결제 시 월 환산 10,750원</div></div>
+    <div class="tile"><div class="k">MVP 개발</div><div class="v">8<small> 주</small></div><div class="n">결제·페이월 포함 4단계 로드맵</div></div>
+  </div>
+
+  <h3>이 플랫폼이 파는 것</h3>
+  <p>안보·국제정세 정보는 공짜로 넘칩니다. 사람들이 돈을 내는 지점은 정보가 아니라 <strong>판단</strong>입니다. 30년 야전·정책 경력을 가진 특정 개인이 “이 사안은 이렇게 읽어야 한다”고 이름을 걸고 말해주는 것 — 이것이 유일한 방어 가능한 상품입니다. 따라서 사이트의 모든 설계는 <em>익명의 자료실</em>이 아니라 <em>기명(記名)의 판단</em>을 향합니다.</p>
+
+  <div class="panel mark">
+    <h4>설계 원칙 4</h4>
+    <ol style="margin-bottom:0">
+      <li><strong>기명성</strong> — 모든 문건에 저자·작성일·근거자료를 명시한다. 익명 요약본은 만들지 않는다.</li>
+      <li><strong>계층 공개</strong> — 핵심 요약은 무료로 완전 공개, 본문·원자료·슬라이드는 구독. 검색엔진에는 요약이 노출되어야 유입이 생긴다.</li>
+      <li><strong>축적의 가시화</strong> — 253건이라는 규모 자체가 신뢰 자산이다. 아카이브 규모와 시계열을 첫 화면에서 보여준다.</li>
+      <li><strong>단순한 뼈대</strong> — 기능을 늘리지 않는다. 읽기·검색·결제 세 가지만 흠 없이 동작하면 된다.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="s2">
+  <span class="snum">02</span>
+  <h2>브랜드 체계</h2>
+  <p class="lede">‘혜안(慧眼)’은 사물의 본질을 꿰뚫어 보는 눈입니다. 사건을 나열하는 매체가 아니라 <strong>구조를 읽어주는 매체</strong>라는 포지션을 이름 자체가 선언합니다.</p>
+
+  <div class="scroller">
+  <table>
+    <thead><tr><th>항목</th><th>확정안</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td>국문 명칭</td><td><strong>혜안</strong> (한자 병기 慧眼)</td><td>본문·로고 기본 표기</td></tr>
+      <tr><td>영문 표기</td><td class="mono">HYEAN</td><td>영문 자료·해외 독자용. 부제 <span class="mono">Strategic Intelligence, Seoul</span></td></tr>
+      <tr><td>한 줄 정의</td><td>국제정세·안보전략 분석 저널</td><td>메타 설명·검색 결과 노출문</td></tr>
+      <tr><td>슬로건(안)</td><td>“현상 너머의 구조를 읽는다”</td><td>대안 — “보이는 사건, 보이지 않는 질서”</td></tr>
+      <tr><td>도메인 1순위</td><td class="mono">hyean.kr</td><td>차순위 <span class="mono">hyean.co.kr</span> / <span class="mono">hyean.io</span></td></tr>
+      <tr><td>이메일</td><td class="mono">brief@hyean.kr</td><td>발행 알림·기관 문의 공용</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>인장(印章) 마크</h3>
+  <p>로고는 그림 심볼 대신 <strong>낙관(落款) 형식의 인장</strong>으로 갑니다. 문서에 찍히는 인장은 이 서비스가 파는 것 — 책임지고 서명된 판단 — 을 그대로 은유합니다. 정사각 테두리 안에 ‘慧眼’ 두 자, 황동색 단색. 파비콘·워터마크·PDF 헤더에 동일 형태로 재사용됩니다.</p>
+
+  <h3>디자인 토큰</h3>
+  <p>먹빛 청록(靑綠)과 황동(黃銅). 고문서 표지와 청동 인장에서 온 조합으로, 정부·연구기관 사이트의 관성적인 남색을 피하면서도 경박하지 않습니다.</p>
+  <div class="scroller">
+  <table>
+    <thead><tr><th>토큰</th><th class="mono">Light</th><th class="mono">Dark</th><th>용도</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">--ink</td><td class="mono">#141E1C</td><td class="mono">#E8ECE9</td><td>본문 · 제목</td></tr>
+      <tr><td class="mono">--ground</td><td class="mono">#F2F4F1</td><td class="mono">#0D1312</td><td>페이지 바탕(청록 편향 중성색)</td></tr>
+      <tr><td class="mono">--accent</td><td class="mono">#1D4E46</td><td class="mono">#5FA898</td><td>링크 · 구조 요소</td></tr>
+      <tr><td class="mono">--brass</td><td class="mono">#8C6D33</td><td class="mono">#CBA765</td><td>인장 · 강조 1점</td></tr>
+      <tr><td class="mono">--rule</td><td class="mono">#D3DAD5</td><td class="mono">#26312E</td><td>괘선 · 경계</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>서체</h4>
+  <ul>
+    <li><strong>고운바탕</strong> (Gowun Batang) — 제목·인용. 명조의 품격을 주되 노토명조보다 개성이 있습니다.</li>
+    <li><strong>IBM Plex Sans KR</strong> — 본문. 장문 가독성과 기술 문서 신뢰감을 동시에 만족합니다.</li>
+    <li><strong>IBM Plex Mono</strong> — 문서번호·날짜·수치·라벨. 자료의 ‘기록물’ 성격을 강화합니다.</li>
+  </ul>
+  <p>세 서체 모두 Google Fonts에서 제공되므로 별도 라이선스 비용이 없고, <code>display=swap</code>으로 초기 렌더 지연을 방지합니다.</p>
+</section>
+
+<!-- 03 -->
+<section id="s3">
+  <span class="snum">03</span>
+  <h2>독자와 가치</h2>
+  <p class="lede">네 개 독자층은 지불 의사와 유입 경로가 완전히 다릅니다. 하나의 요금제로 넷을 다 잡으려 하면 전부 놓칩니다. <strong>무료층이 유입을, 실무층이 매출을, 기관이 이익을</strong> 만드는 구조로 설계합니다.</p>
+
+  <div class="scroller">
+  <table>
+    <thead><tr><th>세그먼트</th><th>핵심 니즈</th><th>지불 의사</th><th>유입 경로</th><th>역할</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>군·정부·정책</strong><br><span style="color:var(--ink-3);font-size:13px">현직 간부, 국방·외교 공무원, 국회 보좌진</span></td>
+        <td>보고서 작성 시 인용 가능한 구조적 분석. 회의 전 30분 브리핑.</td>
+        <td class="num"><span class="pill b">중</span><br><span style="font-size:12.5px;color:var(--ink-3)">개인 지출 부담 · 기관 결제 선호</span></td>
+        <td>지인 추천, 강연, 학술제</td>
+        <td>권위 형성</td>
+      </tr>
+      <tr>
+        <td><strong>방산·기업 전략</strong><br><span style="color:var(--ink-3);font-size:13px">방위산업, 상사, 금융 리스크팀</span></td>
+        <td>지정학 리스크의 사업 영향 판단. 대외 발표용 근거.</td>
+        <td class="num"><span class="pill a">상</span><br><span style="font-size:12.5px;color:var(--ink-3)">법인카드 · 연간 계약 가능</span></td>
+        <td>검색, 링크드인, 세미나</td>
+        <td><strong>수익 핵심</strong></td>
+      </tr>
+      <tr>
+        <td><strong>연구자·학계·언론</strong><br><span style="color:var(--ink-3);font-size:13px">대학, 연구소, 기자</span></td>
+        <td>1차 자료 접근, 인용 가능한 원문·도표.</td>
+        <td class="num"><span class="pill c">하</span><br><span style="font-size:12.5px;color:var(--ink-3)">학생·기자 할인 필요</span></td>
+        <td>검색, 인용 링크</td>
+        <td>확산·인용</td>
+      </tr>
+      <tr>
+        <td><strong>안보 관심 일반·예비역</strong><br><span style="color:var(--ink-3);font-size:13px">전역 간부, 안보 관심 시민</span></td>
+        <td>믿을 만한 해설. 뉴스보다 깊고 논문보다 짧은 글.</td>
+        <td class="num"><span class="pill c">하~중</span><br><span style="font-size:12.5px;color:var(--ink-3)">1만원대 저항선</span></td>
+        <td>SNS, 커뮤니티, 유튜브</td>
+        <td>트래픽·광고 기반</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <b>가격 벤치마크.</b> 국내 유료 콘텐츠의 개인 구독 기준선은 월 1만원대 초중반입니다(아웃스탠딩 월 13,900원 / 연 139,000원, 5인 이상 그룹 20~40% 할인). 혜안은 발행량이 그보다 적으므로 <strong>월 12,900원</strong>으로 살짝 아래에 두고, 대신 <strong>아카이브 253건 전량 접근</strong>을 차별점으로 내세웁니다.
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="s4">
+  <span class="snum">04</span>
+  <h2>콘텐츠 전략</h2>
+  <p class="lede">폴더 12개 분류는 보관용으로는 정확하지만 독자에게는 너무 잘게 나뉩니다. 웹에서는 <strong>7개 섹션</strong>으로 묶고, 세부 주제는 태그로 처리합니다.</p>
+
+  <h3>폴더 → 웹 섹션 매핑</h3>
+  <div class="scroller">
+  <table>
+    <thead><tr><th>웹 섹션</th><th>원본 폴더</th><th class="mono">문건(약)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>한미동맹</strong></td><td>01_한미동맹 전체(동맹현대화·전작권 / 주한미군·연합연습 / 자주국방 / 국방현안)</td><td class="num">50</td></tr>
+      <tr><td><strong>미국 전략</strong></td><td>02_미국 국가전략 문서 + 03의 미국 쇠퇴·재편 계열</td><td class="num">30</td></tr>
+      <tr><td><strong>미중·국제질서</strong></td><td>03_미중 패권경쟁 + 04_대만·인태</td><td class="num">28</td></tr>
+      <tr><td><strong>전쟁 사례연구</strong></td><td>05_러·우 전쟁 + 06_중동·이란 전쟁</td><td class="num">70</td></tr>
+      <tr><td><strong>미래전·군사혁신</strong></td><td>07_미래전 + 08_해양·무인전력 + 09_공군 전력운용</td><td class="num">45</td></tr>
+      <tr><td><strong>국방정책·제도</strong></td><td>10_국방정책·제도</td><td class="num">11</td></tr>
+      <tr><td><strong>강연·기고</strong></td><td>11_발표·강연·집필 + 12_인문·사회 연구</td><td class="num">30</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>문건 유형별 공개 등급</h3>
+  <p>선택하신 방향은 “전수 탑재 후 단계적 정리”입니다. 다만 <strong>유료 페이월 뒤에 두는 것</strong>과 <strong>단순 보관</strong>은 법적 무게가 다르므로, 오픈 시점부터 아래 4등급을 데이터베이스 필드(<code>rights_tier</code>)로 관리하는 것을 전제로 합니다. 등급은 언제든 상향 가능하되, C·D는 동의 확보 전까지 비공개 상태로 업로드만 해둡니다.</p>
+  <div class="scroller">
+  <table>
+    <thead><tr><th>등급</th><th>대상</th><th>초기 처리</th><th>해제 조건</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill a">A</span></td><td>본인이 작성한 분석보고서·정책보고서 (대다수 docx/pdf 세트)</td><td><strong>즉시 유료 공개</strong></td><td>—</td></tr>
+      <tr><td><span class="pill b">B</span></td><td>미 정부 공개 원문 — 2025 NSS, 2026 NDS, Project 2025</td><td><strong>무료 자료실</strong>에 원문 링크 + 본인 해설은 유료</td><td>원문 자체를 과금 대상으로 삼지 않음</td></tr>
+      <tr><td><span class="pill c">C</span></td><td>타인 명의 저작 — 윤의철 기조연설, 최병혁 공저 원고, 이상학 장군 계열 연구, 팔란티어 기업자료</td><td>업로드하되 <strong>비공개</strong></td><td>저자·권리자 서면 동의 후 공개</td></tr>
+      <tr><td><span class="pill d">D</span></td><td>내부·개인 문서 — KDVA 서한, 캡스톤 팀 자료, 미완 초안</td><td><strong>영구 비공개</strong></td><td>공개 대상 아님</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>발행 형식</h3>
+  <div class="cols">
+    <div class="card"><span class="tag">BRIEF</span><h5>현안 브리프</h5><p>사건 발생 48시간 내, 2,000자 내외. 무료 공개 후 7일 뒤 구독 전환. 유입의 주력.</p></div>
+    <div class="card"><span class="tag">REPORT</span><h5>분석 보고서</h5><p>기존 253건 및 신규 심층 분석. 요약 무료 + 본문·PDF·슬라이드 구독.</p></div>
+    <div class="card"><span class="tag">ARCHIVE</span><h5>원자료 아카이브</h5><p>NSS·NDS 등 원문과 국영문 요약. 무료. 검색 유입의 관문 역할.</p></div>
+    <div class="card"><span class="tag">SERIES</span><h5>연재·단행본</h5><p>『이란전쟁과 한미동맹의 미래』 같은 장편을 회차로 분할 연재. 구독 유지율 장치.</p></div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="s5">
+  <span class="snum">05</span>
+  <h2>정보구조·화면</h2>
+  <p class="lede">화면은 6개면 충분합니다. 모바일 우선으로 설계하되, 표·도표가 많은 문건 특성상 본문 화면은 가로 스크롤 컨테이너를 기본 제공합니다.</p>
+
+  <h3>사이트맵</h3>
+<pre class="code"><b>/</b>                        홈 — 최신 브리프 3 + 섹션별 대표글 + 아카이브 규모
+<b>/brief</b>                   현안 브리프 목록 (최신순)
+<b>/topics/[slug]</b>           섹션 7종 (한미동맹, 미국전략, 미중·국제질서 …)
+<b>/doc/[slug]</b>              <i>문건 상세 — 요약(공개) + 본문(페이월) + 첨부</i>
+<b>/archive</b>                 전체 카탈로그 · 필터(섹션/연도/유형) · 전문검색
+<b>/pricing</b>                 요금제 · 기관 라이선스 문의
+<b>/account</b>                 구독 상태 · 결제수단 · 영수증 · 해지
+<b>/about</b>                   저자 이력 · 편집 원칙 · 인용 정책
+<b>/admin</b>                   <i>발행 · 등급관리 · 통계 (관리자 전용)</i></pre>
+
+  <h3>핵심 화면</h3>
+  <div class="wires">
+    <div class="wire">
+      <div class="bar"><i></i><i></i><i></i> hyean.kr</div>
+      <div class="body">
+        <div class="blk t" style="width:55%"></div>
+        <div class="blk" style="width:80%"></div>
+        <div class="blk br" style="height:26px"></div>
+        <div class="row"><div class="blk" style="height:34px"></div><div class="blk" style="height:34px"></div><div class="blk" style="height:34px"></div></div>
+        <div class="blk" style="width:40%"></div>
+        <div class="row"><div class="blk" style="height:22px"></div><div class="blk" style="height:22px"></div></div>
+      </div>
+      <p class="wcap"><b>HOME</b>최신 브리프 헤드라인 → 섹션 7 그리드 → “253건의 분석, 2019년부터” 아카이브 카운터 → 구독 CTA</p>
+    </div>
+    <div class="wire">
+      <div class="bar"><i></i><i></i><i></i> /doc/…</div>
+      <div class="body">
+        <div class="blk" style="width:32%"></div>
+        <div class="blk t" style="width:88%"></div>
+        <div class="blk" style="width:60%"></div>
+        <div class="blk acc" style="height:8px;width:100%"></div>
+        <div class="blk" style="width:100%"></div><div class="blk" style="width:94%"></div>
+        <div class="blk lock">구독 회원 전용 — 이어 읽기</div>
+        <div class="blk br" style="height:20px;width:52%"></div>
+      </div>
+      <p class="wcap"><b>DOCUMENT</b>메타(섹션·작성일·문서번호) → 제목 → <b style="display:inline">핵심 요약 전문 공개</b> → 본문 도입 3문단 → 페이월 → 첨부(PDF·슬라이드)</p>
+    </div>
+    <div class="wire">
+      <div class="bar"><i></i><i></i><i></i> /archive</div>
+      <div class="body">
+        <div class="row"><div class="blk" style="height:20px"></div><div class="blk" style="height:20px"></div><div class="blk br" style="height:20px"></div></div>
+        <div class="blk" style="width:100%;height:26px"></div>
+        <div class="blk" style="width:100%;height:26px"></div>
+        <div class="blk" style="width:100%;height:26px"></div>
+        <div class="blk" style="width:100%;height:26px"></div>
+        <div class="blk" style="width:34%"></div>
+      </div>
+      <p class="wcap"><b>ARCHIVE</b>섹션·연도·유형 필터 칩 + 전문검색 → 밀도 높은 목록(제목·요약 1줄·날짜·자물쇠 표시)</p>
+    </div>
+    <div class="wire">
+      <div class="bar"><i></i><i></i><i></i> /pricing</div>
+      <div class="body">
+        <div class="blk t" style="width:46%"></div>
+        <div class="row">
+          <div class="blk" style="height:76px"></div>
+          <div class="blk acc" style="height:76px"></div>
+          <div class="blk" style="height:76px"></div>
+        </div>
+        <div class="blk" style="width:70%"></div>
+      </div>
+      <p class="wcap"><b>PRICING</b>3단 요금제, 가운데(개인 연간) 강조 → 기관 라이선스 문의 폼 → 환불·해지 정책 명시</p>
+    </div>
+    <div class="wire">
+      <div class="bar"><i></i><i></i><i></i> /account</div>
+      <div class="body">
+        <div class="blk t" style="width:38%"></div>
+        <div class="blk acc" style="height:30px;width:100%"></div>
+        <div class="row"><div class="blk" style="height:18px"></div><div class="blk" style="height:18px"></div></div>
+        <div class="blk" style="width:100%;height:18px"></div>
+        <div class="blk" style="width:44%;height:18px"></div>
+      </div>
+      <p class="wcap"><b>ACCOUNT</b>구독 상태 배지(다음 결제일 명시) → 결제수단 변경 → 영수증 목록 → <b style="display:inline">해지 버튼 1클릭 노출</b></p>
+    </div>
+    <div class="wire">
+      <div class="bar"><i></i><i></i><i></i> /admin</div>
+      <div class="body">
+        <div class="row"><div class="blk br" style="height:16px"></div><div class="blk" style="height:16px"></div></div>
+        <div class="blk" style="width:100%;height:44px"></div>
+        <div class="row"><div class="blk" style="height:20px"></div><div class="blk" style="height:20px"></div><div class="blk" style="height:20px"></div></div>
+        <div class="blk" style="width:56%"></div>
+      </div>
+      <p class="wcap"><b>ADMIN</b>Markdown 붙여넣기 → 섹션·등급·공개일 지정 → 첨부 업로드 → 발행. 통계(조회·전환·이탈 지점)</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>모바일 원칙.</b> 본문 폭 68자 고정, 표는 개별 <code>overflow-x</code> 컨테이너, 페이월은 화면 하단 고정 바가 아니라 본문 흐름 안에 배치(iOS 사파리에서 고정 바가 주소창과 충돌). PDF는 모바일에서 다운로드가 아니라 <strong>웹 뷰어 우선</strong>으로 열어 이탈을 줄입니다.
+  </div>
+</section>
+
+<!-- 06 -->
+<section id="s6">
+  <span class="snum">06</span>
+  <h2>수익모델</h2>
+  <p class="lede">1단계는 구독 단일 모델로 단순하게 갑니다. 광고는 <strong>월 순방문자 2만 이상</strong>이 확보된 뒤에 붙입니다 — 그 전에 붙이면 단가는 무의미하고 브랜드 격만 떨어집니다.</p>
+
+  <div class="plans">
+    <div class="plan">
+      <div class="nm">열람</div>
+      <div class="pr">무료<small></small></div>
+      <ul>
+        <li>모든 문건의 핵심 요약 전문</li>
+        <li>현안 브리프 발행 후 7일간 전문</li>
+        <li>원자료 아카이브(NSS·NDS 등)</li>
+        <li>월 2건 전문 열람</li>
+      </ul>
+    </div>
+    <div class="plan hero">
+      <div class="nm">멤버십</div>
+      <div class="pr">12,900<small> 원 / 월</small></div>
+      <ul>
+        <li>연간 129,000원 — 2개월분 무료</li>
+        <li>아카이브 253건 전량 열람</li>
+        <li>PDF·슬라이드 다운로드(워터마크)</li>
+        <li>신규 발행 이메일 알림</li>
+        <li>전문 검색 · 인용 서식 복사</li>
+      </ul>
+    </div>
+    <div class="plan">
+      <div class="nm">기관</div>
+      <div class="pr">협의<small> · 연간계약</small></div>
+      <ul>
+        <li>5~50인 20% / 50~100인 30% / 100인+ 40%</li>
+        <li>IP 대역 또는 도메인 기반 자동 인증</li>
+        <li>세금계산서 · 연간 일괄 결제</li>
+        <li>비공개 맞춤 브리핑 별도 견적</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>광고 도입 (2단계)</h3>
+  <div class="scroller">
+  <table>
+    <thead><tr><th>시점</th><th>형태</th><th>이유</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">MAU 2만+</td><td><strong>직접 판매 스폰서십</strong> — 방산·법무·리서치 기업 1~2곳, 브리프 하단 텍스트 배너</td><td>독자 질(質)이 높아 CPM보다 직접 계약 단가가 훨씬 유리. 애드센스는 격을 떨어뜨림.</td></tr>
+      <tr><td class="mono">MAU 5만+</td><td><strong>스폰서 리포트</strong> — 기업 의뢰 분석보고서, ‘협찬’ 명시</td><td>수익성 최상. 단, 편집 독립성 원칙을 <code>/about</code>에 사전 명문화해야 신뢰가 유지됨.</td></tr>
+      <tr><td class="mono">상시</td><td><strong>강연·자문 유입</strong> — 사이트를 포트폴리오로 활용</td><td>실제로 가장 큰 수익원이 될 가능성. 문의 폼을 모든 문건 하단에 배치.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--ink-2);font-size:14px">구독 회원에게는 광고를 노출하지 않습니다. 유료 독자에게 광고를 보이는 순간 두 상품이 서로를 갉아먹습니다.</p>
+</section>
+
+<!-- 07 -->
+<section id="s7">
+  <span class="snum">07</span>
+  <h2>기술 아키텍처</h2>
+  <p class="lede">Next.js(App Router) + Vercel + Supabase. 서버를 직접 운영하지 않고, 콘텐츠 보호에 필요한 판단만 서버에서 수행하는 구조입니다.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 720 300" role="img" aria-label="혜안 플랫폼 아키텍처 다이어그램">
+      <defs>
+        <marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="var(--rule-2)"/>
+        </marker>
+      </defs>
+      <g font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--ink-2)">
+
+        <rect x="8" y="16" width="180" height="268" rx="3" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="20" y="36" fill="var(--brass)" letter-spacing="1.4">CLIENT</text>
+        <rect x="24" y="50" width="148" height="42" rx="2" fill="var(--surface)" stroke="var(--rule-2)"/>
+        <text x="36" y="68" fill="var(--ink)" font-size="11.5">모바일 브라우저</text>
+        <text x="36" y="82">반응형 · PWA 미적용</text>
+        <rect x="24" y="104" width="148" height="42" rx="2" fill="var(--surface)" stroke="var(--rule-2)"/>
+        <text x="36" y="122" fill="var(--ink)" font-size="11.5">데스크톱 브라우저</text>
+        <text x="36" y="136">본문 · PDF 뷰어</text>
+        <rect x="24" y="158" width="148" height="42" rx="2" fill="var(--surface)" stroke="var(--rule-2)"/>
+        <text x="36" y="176" fill="var(--ink)" font-size="11.5">검색엔진 크롤러</text>
+        <text x="36" y="190">요약만 색인 허용</text>
+
+        <rect x="220" y="16" width="220" height="268" rx="3" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="234" y="36" fill="var(--brass)" letter-spacing="1.4">VERCEL · NEXT.JS</text>
+        <rect x="236" y="50" width="188" height="46" rx="2" fill="var(--surface)" stroke="var(--accent)"/>
+        <text x="248" y="68" fill="var(--ink)" font-size="11.5">Server Components</text>
+        <text x="248" y="82">권한 판정 후 본문 렌더</text>
+        <rect x="236" y="108" width="188" height="46" rx="2" fill="var(--surface)" stroke="var(--rule-2)"/>
+        <text x="248" y="126" fill="var(--ink)" font-size="11.5">Route Handlers</text>
+        <text x="248" y="140">/api/webhook · /api/file</text>
+        <rect x="236" y="166" width="188" height="46" rx="2" fill="var(--surface)" stroke="var(--rule-2)"/>
+        <text x="248" y="184" fill="var(--ink)" font-size="11.5">ISR 캐시</text>
+        <text x="248" y="198">요약·목록 정적화</text>
+        <rect x="236" y="224" width="188" height="42" rx="2" fill="var(--surface)" stroke="var(--rule-2)"/>
+        <text x="248" y="242" fill="var(--ink)" font-size="11.5">Edge Middleware</text>
+        <text x="248" y="256">세션 확인 · 리다이렉트</text>
+
+        <rect x="472" y="16" width="240" height="200" rx="3" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="486" y="36" fill="var(--brass)" letter-spacing="1.4">SUPABASE</text>
+        <rect x="488" y="50" width="208" height="36" rx="2" fill="var(--surface)" stroke="var(--rule-2)"/>
+        <text x="500" y="72" fill="var(--ink)" font-size="11.5">Postgres + RLS</text>
+        <rect x="488" y="94" width="208" height="36" rx="2" fill="var(--surface)" stroke="var(--rule-2)"/>
+        <text x="500" y="116" fill="var(--ink)" font-size="11.5">Auth (이메일 · 카카오)</text>
+        <rect x="488" y="138" width="208" height="36" rx="2" fill="var(--surface)" stroke="var(--accent)"/>
+        <text x="500" y="160" fill="var(--ink)" font-size="11.5">Storage (비공개 버킷)</text>
+        <rect x="488" y="182" width="208" height="24" rx="2" fill="var(--surface)" stroke="var(--rule-2)"/>
+        <text x="500" y="198" font-size="10.5">Edge Function — 워터마크 생성</text>
+
+        <rect x="472" y="232" width="240" height="52" rx="3" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="486" y="252" fill="var(--brass)" letter-spacing="1.4">PG</text>
+        <text x="486" y="270" fill="var(--ink)" font-size="11.5">포트원 → 토스페이먼츠 (빌링키)</text>
+
+        <path d="M190,120 L218,120" stroke="var(--rule-2)" fill="none" marker-end="url(#ar)"/>
+        <path d="M442,110 L470,110" stroke="var(--rule-2)" fill="none" marker-end="url(#ar)"/>
+        <path d="M442,140 L470,250" stroke="var(--rule-2)" fill="none" marker-end="url(#ar)"/>
+      </g>
+    </svg>
+  </div>
+  <p class="dcap">그림 1 — 요청 흐름. 본문 권한 판정은 반드시 서버(Server Component)에서 수행한다.</p>
+
+  <h3>선택 근거</h3>
+  <div class="scroller">
+  <table>
+    <thead><tr><th>결정</th><th>이유</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Vercel Pro 필수</strong> ($20/월)</td><td>Hobby 플랜은 상업적 이용이 허용되지 않습니다. 유료 서비스는 개설 시점부터 Pro여야 합니다. 대역폭 1TB/월 포함.</td></tr>
+      <tr><td><strong>Supabase Pro</strong> ($25/월)</td><td>Free는 DB 500MB·스토리지 1GB로 PDF 수백 건을 감당하지 못합니다. Pro는 스토리지 100GB, 대역폭 250GB 포함(초과 GB당 $0.09).</td></tr>
+      <tr><td><strong>본문은 DB에, 첨부는 Storage에</strong></td><td>본문을 PDF로만 두면 페이월도 검색도 불가능합니다. 본문은 Markdown으로 <code>documents.body_md</code>에 저장하고, 원본 PDF·PPTX는 비공개 버킷에 둡니다.</td></tr>
+      <tr><td><strong>App Router + RSC</strong></td><td>권한에 따라 본문을 <em>보낼지 말지</em>를 서버에서 결정합니다. 클라이언트에서 CSS로 가리는 방식은 개발자도구로 즉시 뚫립니다.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>저장소 구조</h3>
+<pre class="code"><b>hyean/</b>
+├─ app/
+│  ├─ (public)/          <i>홈 · 목록 · about · pricing</i>
+│  ├─ doc/[slug]/        <i>page.tsx — RSC에서 권한 판정</i>
+│  ├─ account/           <i>구독 관리 (인증 필요)</i>
+│  ├─ admin/             <i>발행 도구 (role=admin)</i>
+│  └─ api/
+│     ├─ payments/webhook/   <i>포트원 결제 웹훅</i>
+│     └─ files/[id]/         <i>Signed URL 발급</i>
+├─ lib/
+│  ├─ supabase/          <i>server.ts · client.ts</i>
+│  ├─ entitlement.ts     <i>열람 권한 단일 판정 함수</i>
+│  └─ watermark.ts
+├─ components/
+└─ supabase/migrations/  <i>SQL 마이그레이션 (버전 관리)</i></pre>
+</section>
+
+<!-- 08 -->
+<section id="s8">
+  <span class="snum">08</span>
+  <h2>데이터 모델</h2>
+  <p class="lede">테이블 8개면 충분합니다. 구독 상태를 문건 접근 권한과 <strong>직접 연결하지 않고</strong> <code>entitlements</code> 한 겹을 두는 것이 핵심 — 나중에 기관 라이선스·무료 체험·기자단 계정을 코드 수정 없이 얹을 수 있습니다.</p>
+
+<pre class="code"><b>profiles</b>          id(uuid, =auth.users) · email · name · org · role(reader|admin) · created_at
+
+<b>categories</b>        id · slug · name_ko · name_en · sort_order
+
+<b>documents</b>         id · slug · title · subtitle · category_id
+                  summary_md      <i>무료 공개 — 검색엔진 색인 대상</i>
+                  body_md         <i>유료 본문 — 권한 통과 시에만 전송</i>
+                  doc_type        <i>brief | report | archive | series</i>
+                  rights_tier     <i>A | B | C | D  (§04 공개 등급)</i>
+                  access_level    <i>free | member | institution</i>
+                  published_at · free_until · source_path · tags[] · view_count
+
+<b>attachments</b>       id · document_id · storage_path · kind(pdf|pptx|hwpx|image)
+                  filename · bytes · is_public
+
+<b>plans</b>             id · code(free|member_m|member_y|inst) · price_krw · period · seats
+
+<b>subscriptions</b>     id · user_id · plan_id · status(active|past_due|canceled)
+                  billing_key · current_period_end · canceled_at
+
+<b>entitlements</b>      id · user_id · scope(all|category|document) · scope_id
+                  source(subscription|institution|grant|trial) · expires_at
+                  <i>↑ 권한 판정은 오직 이 테이블만 조회한다</i>
+
+<b>payments</b>          id · user_id · subscription_id · pg_tx_id · amount_krw
+                  status · paid_at · receipt_url
+
+<b>access_logs</b>       id · user_id · document_id · action(view|download) · ip_hash · at
+                  <i>↑ 다운로드 남용 탐지 · 기관 정산 근거</i></pre>
+
+  <h3>RLS 정책 (핵심 3개)</h3>
+<pre class="code"><i>-- 1. 요약은 누구나, 본문은 권한자만</i>
+<b>create policy</b> "doc_read" <b>on</b> documents <b>for select using</b> (
+  published_at &lt;= now()
+);
+<i>-- body_md는 SELECT 컬럼 권한을 회수하고, 서버에서 SECURITY DEFINER 함수로만 조회</i>
+<b>revoke select</b> (body_md) <b>on</b> documents <b>from</b> anon, authenticated;
+
+<i>-- 2. 열람 권한 판정 함수 (서버 전용)</i>
+<b>create function</b> get_document_body(doc_slug text)
+<b>returns</b> text <b>language</b> plpgsql <b>security definer as</b> $$
+<b>begin</b>
+  <b>if exists</b> (<b>select</b> 1 <b>from</b> entitlements e
+              <b>where</b> e.user_id = auth.uid()
+                <b>and</b> (e.expires_at <b>is null or</b> e.expires_at &gt; now())
+                <b>and</b> (e.scope = 'all' <b>or</b> e.scope_id = ...))
+  <b>then return</b> (<b>select</b> body_md <b>from</b> documents <b>where</b> slug = doc_slug);
+  <b>end if</b>;
+  <b>return null</b>;
+<b>end</b>; $$;
+
+<i>-- 3. 본인 결제·구독만 조회</i>
+<b>create policy</b> "own_rows" <b>on</b> subscriptions <b>for select</b>
+  <b>using</b> (user_id = auth.uid());</pre>
+
+  <div class="note">
+    <b>흔한 실수.</b> 본문을 클라이언트로 다 보낸 뒤 <code>blur</code>나 <code>max-height</code>로 가리는 구현이 많습니다. 개발자도구 한 번이면 전문이 드러납니다. 반드시 <strong>서버에서 본문을 아예 응답에 담지 않는</strong> 방식이어야 합니다.
+  </div>
+</section>
+
+<!-- 09 -->
+<section id="s9">
+  <span class="snum">09</span>
+  <h2>콘텐츠 보호</h2>
+  <p class="lede">완벽한 복제 방지는 불가능합니다. 목표는 <strong>대량 유출을 어렵게 하고, 유출 시 출처를 특정</strong>하는 것입니다.</p>
+
+  <ol class="steps">
+    <li><b>비공개 버킷 원칙</b><span>Supabase Storage 버킷을 private로 두고 공개 URL을 절대 생성하지 않습니다. 파일 접근은 <code>/api/files/[id]</code>를 거쳐 권한 확인 후 <strong>유효기간 60초 Signed URL</strong>을 발급합니다.</span></li>
+    <li><b>개인화 워터마크</b><span>PDF 다운로드 시 Edge Function이 각 페이지 하단에 <code>혜안 · 홍길동(hong@corp.kr) · 2026-09-01</code>을 삽입합니다. 유출본이 돌아다니면 누구 계정에서 나갔는지 즉시 특정됩니다. 억지력이 실제 차단보다 큽니다.</span></li>
+    <li><b>다운로드 한도</b><span>계정당 일 20건·월 100건. 초과 시 자동 차단 후 관리자 알림. <code>access_logs</code>의 <code>ip_hash</code>로 계정 공유(동시 다중 IP)를 탐지합니다.</span></li>
+    <li><b>본문 서버 렌더</b><span>§08의 원칙대로 권한 없는 요청에는 본문을 응답에 담지 않습니다. HTML 소스에도 남지 않습니다.</span></li>
+    <li><b>검색엔진 정책</b><span>요약(<code>summary_md</code>)은 색인을 <strong>허용</strong>해야 유입이 생깁니다. 본문은 애초에 전송되지 않으므로 색인될 수 없습니다. 구조화 데이터(<code>schema.org/Article</code> + <code>isAccessibleForFree: false</code>)를 넣어 구글의 유료 콘텐츠 정책을 준수합니다.</span></li>
+  </ol>
+
+  <p style="color:var(--ink-2);font-size:14px">우클릭 금지·인쇄 차단 같은 조치는 권하지 않습니다. 실효가 없고 정상 이용자만 불편하게 만듭니다.</p>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <span class="snum">10</span>
+  <h2>결제 설계</h2>
+  <p class="lede">국내 카드 정기결제는 <strong>빌링키</strong> 방식이 표준입니다. 해외 결제 서비스(Stripe 등)로는 국내 카드사 정기결제를 온전히 처리하기 어렵습니다.</p>
+
+  <div class="scroller">
+  <table>
+    <thead><tr><th>선택지</th><th>장점</th><th>유의점</th><th>권고</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>토스페이먼츠 직연동</strong></td>
+        <td>결제위젯으로 카드·간편결제 UI까지 반나절이면 연동. 문서·레퍼런스가 가장 충실.</td>
+        <td>일반 가맹점 3.4%. 정산 주기는 계약 조건(일/주/월)에 따르며 최소 일주일 — 즉시 현금화는 기대하지 마십시오.</td>
+        <td><span class="pill a">1순위</span> 1인 운영 기준 가장 빠름</td>
+      </tr>
+      <tr>
+        <td><strong>포트원 경유</strong></td>
+        <td>PG를 갈아타도 코드 재사용. 여러 PG 동시 운용 가능.</td>
+        <td>초기 설정이 복잡. 수수료는 계약한 PG사 기준.</td>
+        <td><span class="pill b">확장 시</span> 해외결제·기관결제 추가 시점에 전환</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note risk">
+    <b>빌링키는 PG에 종속됩니다.</b> 같은 카드라도 PG사마다 빌링키가 다르므로, 나중에 PG를 바꾸면 기존 구독자에게 <strong>전원 재등록</strong>을 받아야 합니다. 구독자가 쌓인 뒤 옮기면 이탈이 큽니다. PG 선택은 오픈 전에 확정하되, 향후 이전 가능성이 조금이라도 있다면 여러 PG의 빌링키를 동시 발급해두는 상품(포트원 ‘슈퍼빌링키’ 등)을 처음부터 검토하십시오.
+  </div>
+
+  <div class="note">
+    <b>수수료는 매출 구간에 따라 크게 달라집니다.</b> 영세 가맹점(연 매출 3억원 이하)은 2026년 2월 인하로 신용카드 <strong>0.40%</strong>(체크카드 0.15%)가 적용됩니다. 중소 구간은 3~5억 1.00%, 5~10억 1.15%, 10~30억 1.45%. 일반 가맹점 3.4%와는 자릿수가 다르므로, 초기 매출 규모에서는 수수료가 손익에 거의 영향을 주지 않습니다.
+  </div>
+
+  <h3>정기결제 흐름</h3>
+  <ol class="steps">
+    <li><b>빌링키 발급</b><span>구독 신청 → PG 인증창 → 빌링키 수신 → <code>subscriptions.billing_key</code>에 암호화 저장. 카드번호는 자사 서버에 절대 보관하지 않습니다.</span></li>
+    <li><b>최초 결제</b><span>빌링키로 즉시 승인 → 웹훅 수신 → <code>payments</code> 기록 → <code>entitlements</code>에 <code>scope='all'</code> 행 생성, <code>expires_at</code> = 다음 결제일 +3일(유예).</span></li>
+    <li><b>정기 청구</b><span>Supabase <code>pg_cron</code>이 매일 자정 만료 예정 구독을 조회해 PG 승인 요청. 성공 시 <code>current_period_end</code> 연장.</span></li>
+    <li><b>실패 처리</b><span>1차 실패 → <code>past_due</code> 전환 및 이메일 통지 → 3일·5일차 재시도 → 7일차 <code>canceled</code>, 권한 회수.</span></li>
+    <li><b>해지</b><span>계정 페이지에서 1클릭. 즉시 차단하지 않고 <strong>결제 기간 만료일까지 열람 유지</strong>합니다. 해지가 어려우면 분쟁과 민원이 늘어납니다.</span></li>
+  </ol>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <span class="snum">11</span>
+  <h2>법무·리스크</h2>
+  <p class="lede">유료 서비스로 전환하는 순간 세 가지 의무가 새로 생깁니다. 오픈 전에 처리해야 하는 항목들입니다.</p>
+
+  <div class="scroller">
+  <table>
+    <thead><tr><th>항목</th><th>내용</th><th>대응</th><th>시점</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>통신판매업 신고</strong></td>
+        <td>직전년도 거래 50회 미만이거나 부가세법상 간이과세자면 면제되나, 구독 서비스는 곧 기준을 넘깁니다.</td>
+        <td>사업자등록 → 구매안전서비스 확인증 → 관할 구청 신고. 사이트 하단에 신고번호 표기.</td>
+        <td class="mono">오픈 전</td>
+      </tr>
+      <tr>
+        <td><strong>청약철회 · 미리보기 의무</strong></td>
+        <td>전자상거래법 제17조 제2항 — 디지털콘텐츠는 제공 개시 후 철회를 제한할 수 있으나, <strong>사업자가 미리보기·체험 기회를 제공하지 않았다면 제한이 무효</strong>가 됩니다.</td>
+        <td>모든 문건에 요약 전문 공개 + 본문 도입부 노출. 이것이 §05 페이월 설계의 법적 근거이기도 합니다.</td>
+        <td class="mono">설계 반영</td>
+      </tr>
+      <tr>
+        <td><strong>정기결제 고지</strong></td>
+        <td>자동 갱신·해지 방법을 명확히 안내해야 하며, 최근 전자상거래법 집행이 강화되는 추세입니다.</td>
+        <td>결제 직전 갱신일·금액 재확인 화면 + 갱신 3일 전 이메일 통지 + 1클릭 해지.</td>
+        <td class="mono">오픈 전</td>
+      </tr>
+      <tr>
+        <td><strong>개인정보 처리방침</strong></td>
+        <td>이메일·결제정보·접속기록 수집.</td>
+        <td>처리방침 및 이용약관 게시, 수집 항목·보유기간 명시. <code>access_logs</code>의 IP는 해시로만 보관.</td>
+        <td class="mono">오픈 전</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>콘텐츠 리스크</h3>
+  <div class="scroller">
+  <table>
+    <thead><tr><th>위험</th><th>내용</th><th>대응</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="pill d">높음</span> 타인 저작물 과금</td>
+        <td>기조연설문, 공저 원고, 기업 자료(팔란티어 등)를 유료 페이월 뒤에 두는 것은 단순 보관과 법적 성격이 다릅니다.</td>
+        <td>§04의 C등급으로 분류해 <strong>비공개 업로드</strong> 후, 저자·권리자 동의 확보 시 순차 공개. 동의는 이메일 한 통이면 되는 경우가 대부분입니다.</td>
+      </tr>
+      <tr>
+        <td><span class="pill c">중간</span> AI 생성 초안 표기</td>
+        <td>일부 문건은 생성형 AI 초안(그록·제미나이·챗GPT 비교안)을 포함합니다. 유료 콘텐츠에서 출처 미표기는 신뢰 문제로 번집니다.</td>
+        <td><code>documents</code>에 <code>method</code> 필드를 두고 “AI 보조 작성 · 저자 검증” 등을 문건 하단에 표기.</td>
+      </tr>
+      <tr>
+        <td><span class="pill c">중간</span> 군 관련 민감 정보</td>
+        <td>현직 경력 기반 분석은 군사기밀보호법 저촉 여지를 항상 점검해야 합니다.</td>
+        <td>공개 출처만 인용하는 원칙을 <code>/about</code>에 명문화하고, 발행 전 자체 검토 체크리스트 운영.</td>
+      </tr>
+      <tr>
+        <td><span class="pill b">낮음</span> 정치적 편향 시비</td>
+        <td>특정 정부 정책 비판 문건이 다수 포함되어 있습니다.</td>
+        <td>편집 원칙(사실 기반·반대 논거 병기)을 공개하고, 각 문건에 작성 시점을 명시해 사후 판단과 구분.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p style="font-size:14px;color:var(--ink-2)">위 내용은 일반적인 참고 정보이며 법률 자문이 아닙니다. 통신판매업 신고와 약관은 오픈 전 세무사·변호사 검토를 한 차례 받으시기를 권합니다.</p>
+</section>
+
+<!-- 12 -->
+<section id="s12">
+  <span class="snum">12</span>
+  <h2>로드맵·비용</h2>
+  <p class="lede">결제부터 붙이지 마십시오. <strong>읽히는지 먼저 확인</strong>하고 과금합니다. 1단계에서 트래픽이 나오지 않으면 결제 모듈은 무용지물입니다.</p>
+
+  <div class="scroller">
+  <table>
+    <thead><tr><th>단계</th><th>기간</th><th>산출물</th><th>완료 판정</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="mono"><strong>1 · 발행 기반</strong></td><td class="num">4주</td>
+        <td>Next.js 골격, Supabase 스키마, 관리자 발행 도구, 홈·목록·상세, 전 문건 <strong>무료 공개</strong>, 도메인·SEO</td>
+        <td>A등급 문건 50건 업로드 · 검색 유입 발생</td>
+      </tr>
+      <tr>
+        <td class="mono"><strong>2 · 과금</strong></td><td class="num">4주</td>
+        <td>인증(이메일·카카오), 페이월, PG 빌링키 연동, 계정·해지, 약관·통신판매업 신고</td>
+        <td>실결제 10건 · 해지 플로우 무결</td>
+      </tr>
+      <tr>
+        <td class="mono"><strong>3 · 아카이브 완성</strong></td><td class="num">6주</td>
+        <td>253건 전량 등록, 워터마크 다운로드, 전문검색, 이메일 발행 알림, C등급 동의 확보</td>
+        <td>유료 구독 100명</td>
+      </tr>
+      <tr>
+        <td class="mono"><strong>4 · 확장</strong></td><td class="num">상시</td>
+        <td>기관 라이선스, 스폰서십, 영문 요약, 연재 시리즈</td>
+        <td>기관 계약 1건 · MAU 2만</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>월 고정비</h3>
+  <div class="scroller">
+  <table>
+    <thead><tr><th>항목</th><th class="mono">월 비용</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td>Vercel Pro</td><td class="num mono">$20</td><td>상업적 이용 필수 요건. 대역폭 1TB 포함(초과 시 리전별 $0.15/GB~)</td></tr>
+      <tr><td>Supabase Pro</td><td class="num mono">$25</td><td>DB 8GB · 스토리지 100GB · 대역폭 250GB 포함</td></tr>
+      <tr><td>도메인 (hyean.kr)</td><td class="num mono">약 1,700원</td><td>연 2만원 내외 환산</td></tr>
+      <tr><td>이메일 발송 (Resend 등)</td><td class="num mono">$0~20</td><td>월 3,000통까지 무료 구간 활용</td></tr>
+      <tr><td>PG 수수료</td><td class="num mono">매출 연동</td><td>영세 구간(연 3억 이하) 신용카드 0.40% · 일반 3.4%</td></tr>
+      <tr style="background:var(--surface-2)"><td><strong>합계</strong></td><td class="num mono"><strong>약 7~9만원</strong></td><td>초과 사용 없을 때 기준</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:14px;color:var(--ink-2)">손익분기는 구독자 <strong>약 8명</strong>. 100명이면 월 129만원 매출에 고정비 9만원 — 콘텐츠가 이미 있으므로 한계비용이 거의 0인 구조입니다.</p>
+
+  <h3>성공 지표</h3>
+  <div class="tiles">
+    <div class="tile"><div class="k">3개월</div><div class="v">1,000<small> MAU</small></div><div class="n">검색 유입 60% 이상</div></div>
+    <div class="tile"><div class="k">6개월</div><div class="v">100<small> 구독</small></div><div class="n">무료→유료 전환율 2% 목표</div></div>
+    <div class="tile"><div class="k">유지율</div><div class="v">85<small> % / 월</small></div><div class="n">3개월 잔존 70% 이상</div></div>
+    <div class="tile"><div class="k">12개월</div><div class="v">2<small> 건</small></div><div class="n">기관 라이선스 계약</div></div>
+  </div>
+
+  <h3>다음 결정사항</h3>
+  <div class="panel mark">
+    <ol style="margin-bottom:0">
+      <li><strong>도메인 확보</strong> — <code>hyean.kr</code> 가용 여부 확인 및 즉시 등록</li>
+      <li><strong>사업자 형태</strong> — 개인사업자 등록 여부(통신판매업 신고 선결 조건)</li>
+      <li><strong>PG 확정</strong> — 토스페이먼츠 가맹 심사 신청(빌링키는 이관 불가하므로 오픈 전 확정)</li>
+      <li><strong>C등급 동의</strong> — 윤의철·최병혁·이상학 장군 측에 공개 동의 요청 (이메일 3통)</li>
+      <li><strong>1단계 착수</strong> — GitHub 저장소 개설 및 Next.js 골격 구성</li>
+    </ol>
+  </div>
+</section>
+
+</main>
+</div>
+
+<footer>
+  <div>
+    <span>혜안 慧眼 · 서비스 구축 기획서 Rev. 1.0 · 2026.08.31</span>
+    <span>Next.js · Vercel · Supabase · 포트원/토스페이먼츠</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement, btn = document.getElementById('tt');
+  function cur(){
+    var s = root.getAttribute('data-theme');
+    if (s) return s;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  btn.addEventListener('click', function(){
+    root.setAttribute('data-theme', cur() === 'dark' ? 'light' : 'dark');
+  });
+
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var secs  = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (!e.isIntersecting) return;
+        var i = secs.indexOf(e.target);
+        links.forEach(function(l,j){ l.classList.toggle('on', j === i); });
+      });
+    }, { rootMargin: '-15% 0px -75% 0px' });
+    secs.forEach(function(s){ if (s) io.observe(s); });
+  }
+})();
+</script>
+
+</body>
+</html>

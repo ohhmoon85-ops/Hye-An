@@ -1,0 +1,21 @@
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+
+# 환경변수 — 절대 커밋하지 않는다
+.env
+.env.local
+.env*.local
+
+npm-debug.log*
+yarn-error.log*
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# Supabase 로컬
+supabase/.branches
+supabase/.temp

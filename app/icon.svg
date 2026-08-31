@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="4" fill="#141E1C"/>
+  <rect x="7.5" y="7.5" width="49" height="49" rx="2" fill="none" stroke="#CBA765" stroke-width="2.5"/>
+  <text x="32" y="30" text-anchor="middle" fill="#CBA765" font-family="Gowun Batang, Nanum Myeongjo, serif" font-size="21" font-weight="700">慧</text>
+  <text x="32" y="51" text-anchor="middle" fill="#CBA765" font-family="Gowun Batang, Nanum Myeongjo, serif" font-size="21" font-weight="700">眼</text>
+</svg>
