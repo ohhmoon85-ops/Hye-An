@@ -29,14 +29,17 @@ export default async function HomePage() {
 
       {/* ─── 표제 ─────────────────────────────────────────────── */}
       <section className="border-b border-rule bg-surface">
-        <div className="mx-auto max-w-5xl px-5 py-14 sm:py-20">
-          <div className="flex items-start gap-5">
-            <Seal size={54} className="mt-1 shrink-0" />
-            <div>
-              <h1 className="font-serif text-3xl font-bold leading-tight sm:text-4xl">
+        <div className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
+          <div className="flex items-start gap-5 sm:gap-7">
+            <Seal size={58} className="mt-1.5 shrink-0" />
+            <div className="min-w-0">
+              <p className="font-mono text-[0.65rem] tracking-[0.24em] text-brass uppercase">
+                {SITE.subtitleEn}
+              </p>
+              <h1 className="mt-3.5 font-serif text-[2.05rem] leading-[1.28] font-bold sm:text-[2.75rem]">
                 {SITE.tagline}
               </h1>
-              <p className="mt-3 max-w-(--measure) leading-relaxed text-ink-soft">
+              <p className="mt-5 max-w-(--measure) leading-loose text-ink-soft">
                 {SITE.description}. 사건을 나열하지 않는다. 그 아래 놓인 구조를 읽고, 근거를 밝혀
                 판단을 적는다.
               </p>
@@ -107,43 +110,62 @@ export default async function HomePage() {
         )}
 
         {/* ─── 아카이브 카운터 ─────────────────────────────────── */}
-        <section className="mt-16 border border-rule bg-surface px-6 py-10 text-center">
-          <p className="font-mono text-[0.7rem] tracking-[0.2em] text-ink-faint uppercase">
-            Archive
-          </p>
-          <p className="mt-3 font-serif text-5xl font-bold tabular-nums text-accent">
-            {stats.published}
-            <span className="ml-1 text-2xl">건</span>
-          </p>
-          <p className="mt-3 text-sm text-ink-soft">
-            {stats.since ? `${stats.since}년부터 축적된 ` : ''}국제정세·안보전략 분석 문건.
-            <br className="sm:hidden" /> 핵심 요약은 언제나 전문 공개한다.
-          </p>
-          <Link
-            href="/archive"
-            className="mt-5 inline-block border border-accent px-5 py-2 text-sm text-accent transition-colors hover:bg-accent hover:text-ground"
-          >
-            전체 아카이브 열람
-          </Link>
-        </section>
+        {/* 축적의 규모 자체가 신뢰 자산이다. 다만 0건일 때 큰 숫자를 세우면
+            비어 보이므로, 발행 전에는 다른 문안을 내보낸다. */}
+        {stats.published > 0 ? (
+          <section className="mt-16 border border-rule bg-surface px-6 py-12 text-center">
+            <p className="font-mono text-[0.65rem] tracking-[0.24em] text-ink-faint uppercase">
+              Archive
+            </p>
+            <p className="mt-4 font-serif text-6xl leading-none font-bold tabular-nums text-accent">
+              {stats.published}
+              <span className="ml-1.5 text-2xl text-brass">건</span>
+            </p>
+            <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-ink-soft">
+              {stats.since ? `${stats.since}년부터 축적된 ` : ''}국제정세·안보전략 분석 문건. 핵심
+              요약은 언제나 전문 공개한다.
+            </p>
+            <Link
+              href="/archive"
+              className="mt-6 inline-block border border-accent px-5 py-2 text-sm text-accent transition-colors hover:bg-accent hover:text-ground"
+            >
+              전체 아카이브 열람
+            </Link>
+          </section>
+        ) : (
+          <section className="mt-16 border border-rule bg-surface px-6 py-16 text-center">
+            <Seal size={42} className="mx-auto" />
+            <p className="mt-5 font-serif text-lg font-bold">아직 공개된 문건이 없다</p>
+            <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-ink-soft">
+              첫 문건이 발행되면 이곳에 아카이브 규모와 최신 분석이 표시된다.
+            </p>
+          </section>
+        )}
 
         {/* ─── 구독 CTA ────────────────────────────────────────── */}
-        <section className="mt-6 mb-4 border border-rule bg-surface-sunken px-6 py-8">
-          <div className="flex flex-wrap items-end justify-between gap-5">
-            <div>
-              <h2 className="font-serif text-xl font-bold">멤버십</h2>
-              <p className="mt-1.5 max-w-md text-sm leading-relaxed text-ink-soft">
-                아카이브 전량 열람 · PDF·슬라이드 다운로드 · 신규 발행 이메일 알림 · 전문 검색.
+        {/* 면을 뒤집어 페이지를 닫는다. ink/ground 한 쌍만 쓰므로 다크 모드에서
+            자동으로 반대로 뒤집힌다 — 어느 쪽이든 대비 15:1 이상. */}
+        <section className="mt-6 mb-4 bg-ink px-6 py-10 text-ground sm:px-10">
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-7">
+            <div className="max-w-md">
+              <p className="font-mono text-[0.65rem] tracking-[0.24em] uppercase opacity-60">
+                Membership
+              </p>
+              <h2 className="mt-2.5 font-serif text-2xl font-bold">아카이브 전량을 연다</h2>
+              <p className="mt-2.5 text-sm leading-relaxed opacity-75">
+                본문·원자료·첨부 열람 · PDF·슬라이드 다운로드 · 신규 발행 이메일 알림 · 전문 검색.
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              <p className="font-mono text-sm text-ink-soft">
+            <div className="flex items-center gap-6">
+              <p className="font-mono text-sm whitespace-nowrap">
                 월 {formatKrw(12900)}원
-                <span className="text-ink-faint"> / 연 {formatKrw(129000)}원</span>
+                <span className="mt-0.5 block text-[0.68rem] opacity-60">
+                  연 {formatKrw(129000)}원 · 2개월분 무료
+                </span>
               </p>
               <Link
                 href="/pricing"
-                className="bg-accent px-5 py-2.5 text-sm font-medium text-ground transition-opacity hover:opacity-90"
+                className="shrink-0 bg-ground px-5 py-2.5 text-sm font-medium text-ink transition-opacity hover:opacity-85"
               >
                 요금제 보기
               </Link>

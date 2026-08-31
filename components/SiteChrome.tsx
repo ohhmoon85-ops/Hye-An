@@ -31,7 +31,10 @@ export async function SiteHeader() {
               ADMIN
             </Link>
           )}
-          <ThemeToggle />
+          {/* 화면 밝기는 이동이 아니라 조작이다. 괘선으로 구분해 메뉴처럼 보이지 않게 한다. */}
+          <span className="ml-1 border-l border-rule pl-4">
+            <ThemeToggle />
+          </span>
         </nav>
       </div>
     </header>
