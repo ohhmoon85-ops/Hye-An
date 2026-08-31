@@ -114,6 +114,53 @@ npx eslint .
 
 ---
 
+## 배포 (Vercel)
+
+Supabase 와 Vercel 사이에 특별한 연동 설정은 없다. 앱이 HTTPS 로 Supabase API 를
+호출할 뿐이므로, **환경변수를 옮기는 것이 곧 연결**이다. 다만 양쪽에 각각 할 일이
+있고, 한쪽만 하면 로그인이 조용히 실패한다.
+
+### 1. Vercel — 환경변수
+
+Project Settings → Environment Variables 에 `.env.local` 과 같은 값을 넣는다.
+Production · Preview · Development 세 환경 모두에 적용한다.
+
+| 키 | 값 | 비고 |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | `.env.local` 과 동일 | |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `.env.local` 과 동일 | 브라우저 노출 전제. RLS 가 막는다 |
+| `SUPABASE_SERVICE_ROLE_KEY` | `.env.local` 과 동일 | **`NEXT_PUBLIC_` 을 붙이지 않는다** |
+| `SUPABASE_STORAGE_BUCKET` | `documents` | |
+| `NEXT_PUBLIC_SITE_URL` | 배포 주소 | 도메인 등록 전에는 `https://<프로젝트>.vercel.app` |
+| `HYEAN_FREE_ALL` | `true` | 1단계 전면 공개. 2단계에 `false` |
+
+`NEXT_PUBLIC_SITE_URL` 은 정규 URL(canonical)과 사이트맵의 기준이다. 아직 없는
+도메인을 적어두면 검색엔진이 죽은 주소를 색인하므로, 도메인 등록 전에는 실제
+배포 주소를 넣고 등록 후에 바꾼다.
+
+### 2. Supabase — 인증 리다이렉트
+
+Authentication → URL Configuration 에 **배포 주소를 추가**한다. 이걸 빼먹으면
+로컬에서 겪었던 것과 똑같이 로그인 링크가 돌아오지 못한다.
+
+- Site URL → 배포 주소
+- Redirect URLs → `https://<배포주소>/auth/callback` 과 `https://<배포주소>/auth/confirm`
+  (localhost 항목은 지우지 말고 함께 둔다)
+
+### 3. 함수 리전
+
+`vercel.json` 이 `icn1`(서울)로 고정한다. Vercel 함수의 기본값은
+`iad1`(워싱턴 DC)이고, DB 는 서울에 있다. 문건 상세는 권한을 매 요청 판정하느라
+DB 를 여러 번 왕복하므로 기본값으로 두면 왕복마다 태평양을 건넌다.
+프로젝트 설정(Settings → Functions)에서도 같은 값을 지정할 수 있다.
+
+### 4. 플랜
+
+Vercel Hobby 는 상업적 이용이 허용되지 않는다. 결제를 붙이는 2단계 전에는
+Pro($20/월)로 올려야 한다.
+
+---
+
 ## 지켜야 할 선
 
 이 네 가지는 편의를 위해서라도 무르지 않는다. 자세한 근거는 [CLAUDE.md](CLAUDE.md).
