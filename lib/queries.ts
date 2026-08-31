@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { createClient, hasSupabaseEnv } from '@/lib/supabase/server'
+import { createClient, createPublicClient, hasSupabaseEnv } from '@/lib/supabase/server'
 import type { Category, DocumentSummary } from '@/lib/types'
 
 /**
@@ -16,7 +16,7 @@ export const DOC_LIST_COLUMNS = `
 
 export async function getCategories(): Promise<Category[]> {
   if (!hasSupabaseEnv()) return []
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('categories')
     .select('id, slug, name_ko, name_en, sort_order')
@@ -35,7 +35,7 @@ type ListOptions = {
 export async function listDocuments(opts: ListOptions = {}) {
   const { categorySlug, docType, year, limit = 20, offset = 0 } = opts
   if (!hasSupabaseEnv()) return { documents: [], total: 0 }
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   let query = supabase
     .from('documents')
@@ -85,7 +85,7 @@ export async function getAttachments(documentId: string) {
 
 export async function searchDocuments(q: string, limit = 40) {
   if (!hasSupabaseEnv()) return []
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase.rpc('search_documents', { q, lim: limit })
   return data ?? []
 }
@@ -93,7 +93,7 @@ export async function searchDocuments(q: string, limit = 40) {
 /** 홈 화면의 "253건의 분석" 카운터 */
 export async function getArchiveStats() {
   if (!hasSupabaseEnv()) return { published: 0, since: null }
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { count } = await supabase
     .from('documents')
     .select('id', { count: 'exact', head: true })
@@ -118,7 +118,7 @@ export async function getArchiveStats() {
 export async function getSectionHighlights() {
   if (!hasSupabaseEnv()) return []
   const categories = await getCategories()
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const results = await Promise.all(
     categories.map(async (category) => {

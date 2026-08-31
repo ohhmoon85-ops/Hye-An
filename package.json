@@ -11,7 +11,8 @@
     "db:link": "supabase link",
     "db:push": "supabase db push",
     "db:seed": "supabase db push --include-seed",
-    "db:diff": "supabase db diff -f"
+    "db:diff": "supabase db diff -f",
+    "verify:security": "node scripts/verify-security.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",

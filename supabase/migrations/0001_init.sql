@@ -274,7 +274,9 @@ create policy "doc_public_read" on documents
 create policy "doc_admin_all" on documents
   for all using (is_admin()) with check (is_admin());
 
--- ★ 본문 컬럼은 일반 권한에서 회수한다. get_document_body() 로만 조회 가능.
+-- ⚠ 아래 한 줄은 **효과가 없다**. 컬럼 단위 revoke 는 컬럼 단위로 부여된
+--   권한만 회수하므로, 테이블 단위 SELECT 가 남아 있으면 그대로 읽힌다.
+--   실제 보호는 0002_restrict_body_column.sql 이 한다. 이 줄은 기록으로만 남긴다.
 --   따라서 문건 질의에 select * 를 쓰면 권한 오류가 난다. lib/queries.ts 의
 --   컬럼 목록 상수만 사용할 것.
 revoke select (body_md) on documents from anon, authenticated;

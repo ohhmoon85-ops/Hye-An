@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type { Profile } from '@/lib/types'
 
 /**
@@ -41,6 +42,23 @@ export async function createClient() {
         },
       },
     }
+  )
+}
+
+/**
+ * 쿠키에 묶이지 않는 익명 클라이언트.
+ *
+ * generateStaticParams·sitemap 처럼 **HTTP 요청이 없는 문맥**에서 쓴다.
+ * 그런 곳에서 cookies() 를 부르면 Next 가 예외를 던진다.
+ *
+ * 익명 권한이므로 RLS 가 그대로 적용된다 — 발행된 문건의 메타와 요약만
+ * 보이고, 본문 컬럼은 0002 마이그레이션이 회수해 두었다.
+ */
+export function createPublicClient() {
+  return createSupabaseClient(
+    env('NEXT_PUBLIC_SUPABASE_URL'),
+    env('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
+    { auth: { persistSession: false, autoRefreshToken: false } }
   )
 }
 

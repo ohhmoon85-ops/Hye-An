@@ -2,11 +2,17 @@ import Link from 'next/link'
 import { Seal } from '@/components/Seal'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { NAV, SITE } from '@/lib/site'
-import { getCurrentProfile } from '@/lib/supabase/server'
 
-export async function SiteHeader() {
-  const profile = await getCurrentProfile()
-
+/**
+ * 공개 화면의 머리글.
+ *
+ * ★ 여기서 세션(쿠키)을 읽지 않는다. 한 번이라도 cookies() 를 부르면 이
+ * 레이아웃을 쓰는 모든 페이지가 요청마다 렌더되어 요약·목록의 ISR 캐시가
+ * 사라진다. 검색 유입이 1단계의 목표이므로 그 대가가 크다.
+ *
+ * 그래서 관리자 링크를 두지 않는다. 운영자는 /admin 을 직접 연다.
+ */
+export function SiteHeader() {
   return (
     <header className="border-b border-rule bg-surface/80 backdrop-blur-sm sticky top-0 z-30 no-print">
       <div className="mx-auto flex max-w-5xl items-center gap-4 px-5 py-3">
@@ -26,11 +32,6 @@ export async function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          {profile?.role === 'admin' && (
-            <Link href="/admin" className="font-mono text-[0.7rem] text-brass hover:underline">
-              ADMIN
-            </Link>
-          )}
           {/* 화면 밝기는 이동이 아니라 조작이다. 괘선으로 구분해 메뉴처럼 보이지 않게 한다. */}
           <span className="ml-1 border-l border-rule pl-4">
             <ThemeToggle />
