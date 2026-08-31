@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:link": "supabase link",
+    "db:push": "supabase db push",
+    "db:seed": "supabase db push --include-seed",
+    "db:diff": "supabase db diff -f"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",
@@ -25,6 +29,7 @@
     "@types/react-dom": "^19.2.5",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.3",
+    "supabase": "^2.116.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3"
   }

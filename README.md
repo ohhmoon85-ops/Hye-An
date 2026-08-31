@@ -20,25 +20,32 @@ npm install
 
 ### 2. Supabase 프로젝트
 
-Pro 플랜으로 프로젝트를 만든 뒤 스키마를 적용한다.
-대시보드 SQL 편집기에서 직접 고치지 않는다 — 변경은 항상 `supabase/migrations/` 에 남긴다.
+**혜안은 자기 프로젝트를 따로 쓴다.** 다른 서비스가 이미 들어 있는 프로젝트에
+얹지 않는다 — 이 스키마는 `public` 스키마에 `profiles` · `subscriptions` ·
+`payments` · `plans` 를 만들기 때문에 회원제 서비스와 이름이 겹치고,
+같은 프로젝트를 쓰면 `auth.users` 도 공유되어 한쪽 가입자가 다른 쪽 계정이 된다.
+
+같은 조직 안에 프로젝트를 하나 더 만들면 된다 (조직은 여러 프로젝트를 가진다).
 
 ```bash
-# Supabase CLI 를 쓰는 경우
-supabase link --project-ref <ref>
-supabase db push
-
-# 또는 psql 로 직접
-psql "$DATABASE_URL" -f supabase/schema.sql
+npx supabase login          # 브라우저가 열린다. 한 번만 하면 된다
+npm run db:link             # 목록에서 hyean 프로젝트를 고른다
+npm run db:push             # supabase/migrations/ 를 적용한다
+npm run db:seed             # (선택) 개발용 표본 문건까지 함께 넣는다
 ```
 
-개발용 표본 문건을 넣으려면:
+대시보드 SQL 편집기에서 직접 고치지 않는다. 스키마 변경은 항상
+`supabase/migrations/` 에 새 파일로 남긴다 — `npm run db:diff <이름>` 이
+현재 DB와의 차이를 마이그레이션 파일로 뽑아준다.
 
-```bash
-psql "$DATABASE_URL" -f supabase/seed.sql
-```
+> **플랜.** 개발 단계에서는 Free 로 충분하다. 다만 Free 는 프로젝트가 7일간
+> 요청이 없으면 일시정지되고 DB 500MB · 스토리지 1GB 로 묶여 있어, PDF 첨부가
+> 쌓이는 3단계와 상업적 운영에는 Pro($25/월)가 필요하다. 조직당 활성 프로젝트
+> 수에도 제한이 있으니 프로젝트를 추가할 때 확인한다.
 
 ### 3. 환경변수
+
+`.env.local` 이 없으면 `.env.local.example` 을 복사해 만든다.
 
 ```bash
 cp .env.local.example .env.local
