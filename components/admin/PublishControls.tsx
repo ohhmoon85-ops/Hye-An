@@ -1,4 +1,5 @@
-import { deleteDocument, setPublished } from '@/app/admin/actions'
+import { setPublished } from '@/app/admin/actions'
+import { DeleteDocumentButton } from '@/components/admin/DeleteDocumentButton'
 import { formatDate } from '@/lib/format'
 import { isPublishable, RIGHTS_TIER_LABEL, type DocumentAdminRow } from '@/lib/types'
 
@@ -54,15 +55,7 @@ export function PublishControls({ doc }: { doc: DocumentAdminRow }) {
             </button>
           )}
 
-          <form action={deleteDocument}>
-            <input type="hidden" name="id" value={doc.id} />
-            <button
-              type="submit"
-              className="font-mono text-[0.7rem] text-ink-faint hover:text-brass"
-            >
-              삭제
-            </button>
-          </form>
+          <DeleteDocumentButton id={doc.id} docNo={doc.doc_no} title={doc.title} />
         </div>
       </div>
 

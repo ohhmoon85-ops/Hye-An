@@ -1,5 +1,7 @@
 import 'server-only'
 
+import { cache } from 'react'
+
 import { createClient, createPublicClient, hasSupabaseEnv } from '@/lib/supabase/server'
 import type { Category, DocumentSummary } from '@/lib/types'
 
@@ -8,11 +10,22 @@ import type { Category, DocumentSummary } from '@/lib/types'
  * body_md 는 anon·authenticated 에서 컬럼 권한이 회수되어 있어 * 질의는 실패하고,
  * 무엇보다 본문이 실수로 페이로드에 섞이는 경로를 원천 차단하기 위해서다.
  */
-export const DOC_LIST_COLUMNS = `
+const DOC_COLUMNS = `
   id, slug, doc_no, title, subtitle, summary_md, method, doc_type, rights_tier,
-  access_level, published_at, free_until, tags, view_count,
-  categories ( slug, name_ko, name_en )
-` as const
+  access_level, published_at, free_until, tags, view_count
+`
+
+export const DOC_LIST_COLUMNS = `${DOC_COLUMNS}, categories ( slug, name_ko, name_en )`
+
+/**
+ * 섹션으로 거를 때 쓰는 형태.
+ *
+ * `!inner` 가 없으면 PostgREST 는 임베드 테이블 필터에 걸리지 않은 행도 그대로
+ * 돌려주고 categories 만 null 로 만든다. 그러면 count 가 걸러내기 전 숫자가 되고
+ * range() 도 필터 전 집합에 적용되어, 화면의 건수가 틀리고 목록에서 문건이
+ * 누락된다. inner join 으로 DB 가 직접 걸러내게 한다.
+ */
+const DOC_LIST_COLUMNS_INNER = `${DOC_COLUMNS}, categories!inner ( slug, name_ko, name_en )`
 
 export async function getCategories(): Promise<Category[]> {
   if (!hasSupabaseEnv()) return []
@@ -39,7 +52,7 @@ export async function listDocuments(opts: ListOptions = {}) {
 
   let query = supabase
     .from('documents')
-    .select(DOC_LIST_COLUMNS, { count: 'exact' })
+    .select(categorySlug ? DOC_LIST_COLUMNS_INNER : DOC_LIST_COLUMNS, { count: 'exact' })
     .not('published_at', 'is', null)
     .lte('published_at', new Date().toISOString())
     .order('published_at', { ascending: false })
@@ -54,23 +67,29 @@ export async function listDocuments(opts: ListOptions = {}) {
   }
 
   const { data, count } = await query
-  let rows = (data as unknown as DocumentSummary[]) ?? []
-  // PostgREST 는 임베드 테이블 필터에 해당하지 않는 행을 categories: null 로 돌려준다.
-  if (categorySlug) rows = rows.filter((d) => d.categories !== null)
+  const rows = (data as unknown as DocumentSummary[]) ?? []
 
   return { documents: rows, total: count ?? rows.length }
 }
 
-export async function getDocumentBySlug(slug: string): Promise<DocumentSummary | null> {
-  if (!hasSupabaseEnv()) return null
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('documents')
-    .select(DOC_LIST_COLUMNS)
-    .eq('slug', slug)
-    .maybeSingle()
-  return (data as unknown as DocumentSummary) ?? null
-}
+/**
+ * 한 요청 안에서는 한 번만 질의한다.
+ * generateMetadata 와 본문 렌더가 같은 문건을 각각 부르는데, cache() 로 묶지
+ * 않으면 요청마다 DB 왕복이 한 번 더 늘어난다. 문건 상세는 권한 판정 때문에
+ * 이미 왕복이 여러 번인 화면이라 한 번도 아깝다.
+ */
+export const getDocumentBySlug = cache(
+  async (slug: string): Promise<DocumentSummary | null> => {
+    if (!hasSupabaseEnv()) return null
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('documents')
+      .select(DOC_LIST_COLUMNS)
+      .eq('slug', slug)
+      .maybeSingle()
+    return (data as unknown as DocumentSummary) ?? null
+  }
+)
 
 export async function getAttachments(documentId: string) {
   if (!hasSupabaseEnv()) return []

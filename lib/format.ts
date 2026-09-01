@@ -14,11 +14,19 @@ export function formatDate(value: string | Date | null | undefined): string {
   return `${get('year')}.${get('month')}.${get('day')}`
 }
 
-/** 2026-08-31 — <time datetime> 속성용 */
+/** 2026-08-31 — <time datetime> 속성과 구조화 데이터용. 한국 시간 기준. */
 export function isoDate(value: string | Date | null | undefined): string {
   if (!value) return ''
   const date = typeof value === 'string' ? new Date(value) : value
-  return date.toISOString().slice(0, 10)
+  // toISOString() 은 UTC 기준이라 한국시간 오전 9시 이전 발행분이 하루 앞으로
+  // 밀린다. 화면에 보이는 날짜(formatDate)와 어긋나면 안 되므로 같은 기준을 쓴다.
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: KST,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date)
+  return parts // en-CA 는 YYYY-MM-DD 형식이다
 }
 
 /** 남은 무료 공개 기간 — "무료 공개 6일 남음" */

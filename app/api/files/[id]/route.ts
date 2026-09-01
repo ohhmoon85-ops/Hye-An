@@ -55,7 +55,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   }
 
   const profile = await getCurrentProfile()
-  await logAccess({ documentId: file.document_id, userId: profile?.id ?? null, action: 'download' })
+  logAccess({ documentId: file.document_id, userId: profile?.id ?? null, action: 'download' })
 
   return NextResponse.redirect(signed.signedUrl, {
     status: 302,

@@ -61,7 +61,7 @@ export default async function DocumentPage({ params }: Params) {
   const attachments = await getAttachments(doc.id)
   const profile = await getCurrentProfile()
 
-  void logAccess({ documentId: doc.id, userId: profile?.id ?? null, action: 'view' })
+  logAccess({ documentId: doc.id, userId: profile?.id ?? null, action: 'view' })
 
   return (
     <article className="mx-auto max-w-5xl px-5 pb-16">
