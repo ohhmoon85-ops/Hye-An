@@ -32,8 +32,16 @@ export default function LoginPage() {
       <LoginForm />
 
       <p className="font-mono text-[0.65rem] leading-relaxed text-ink-faint">
-        로그인하면 이용약관과 개인정보 처리방침에 동의하는 것으로 본다. 수집 항목은 이메일과
-        접속기록이며, 접속 IP는 해시로만 보관한다.
+        로그인하면{' '}
+        <Link href="/terms" className="text-accent hover:underline">
+          이용약관
+        </Link>
+        과{' '}
+        <Link href="/privacy" className="text-accent hover:underline">
+          개인정보 처리방침
+        </Link>
+        에 동의하는 것으로 본다. 수집 항목은 이메일과 접속기록이며, 접속 IP는 되돌릴 수 없는
+        해시로만 보관한다. 비밀번호는 쓰지 않는다.
       </p>
     </div>
   )

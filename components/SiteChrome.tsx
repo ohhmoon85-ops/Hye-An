@@ -79,6 +79,12 @@ export function SiteFooter() {
             <Link href="/about#institution" className="hover:text-accent">
               기관 라이선스 문의
             </Link>
+            <Link href="/terms" className="hover:text-accent">
+              이용약관
+            </Link>
+            <Link href="/privacy" className="hover:text-accent">
+              개인정보 처리방침
+            </Link>
           </nav>
         </div>
 
