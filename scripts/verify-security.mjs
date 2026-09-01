@@ -107,6 +107,24 @@ console.log('\n절대규칙 3 — Storage 는 private, 경로도 내보내지 �
   check('공개 버킷 경로가 열려 있지 않다', r.status >= 400, `HTTP ${r.status}`)
 }
 
+console.log('\n기록 함수 — 클라이언트가 조회수를 부풀리거나 기록을 위조할 수 없다')
+
+// 권한 거부(401/403)만 통과로 본다. 없는 id 로 인한 외래키 오류(409)는
+// 호출 자체는 성공했다는 뜻이므로 통과가 아니다.
+const denied = (status) => status === 401 || status === 403
+
+{
+  const r = await rpc('record_access', {
+    doc_id: '00000000-0000-0000-0000-000000000000',
+    act: 'view',
+  })
+  check('익명이 record_access 를 호출할 수 없다', denied(r.status), `HTTP ${r.status}`)
+}
+{
+  const r = await rpc('increment_view_count', { doc_id: '00000000-0000-0000-0000-000000000000' })
+  check('익명이 increment_view_count 를 호출할 수 없다', denied(r.status), `HTTP ${r.status}`)
+}
+
 console.log('\n권한 테이블 — 클라이언트가 스스로 권한을 만들 수 없다')
 
 {
