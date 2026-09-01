@@ -1,14 +1,18 @@
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { hasValidSupabaseEnv } from '@/lib/supabase/env'
 import type { Profile } from '@/lib/types'
 
 /**
  * Supabase 프로젝트를 아직 연결하지 않은 상태에서도 골격을 띄울 수 있게 한다.
- * 설정 전에는 목록이 빈 채로 렌더되고, 화면에 안내가 뜬다.
+ * 설정 전에는 목록이 빈 채로 렌더되고, 화면에 무엇이 잘못됐는지 안내가 뜬다.
+ *
+ * 값의 존재뿐 아니라 **형태**까지 본다. 값이 있으나 엉뚱하면 조용히 빈
+ * 사이트가 되어 원인을 알 수 없기 때문이다. lib/supabase/env.ts 참조.
  */
 export function hasSupabaseEnv(): boolean {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+  return hasValidSupabaseEnv()
 }
 
 function env(name: string): string {
