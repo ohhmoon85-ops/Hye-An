@@ -34,17 +34,14 @@ export function logAccess(params: {
         ? createHash('sha256').update(`${salt}:${ip}`).digest('hex').slice(0, 32)
         : null
 
-      const admin = createAdminClient()
-      await admin.from('access_logs').insert({
-        document_id: params.documentId,
-        user_id: params.userId,
-        action: params.action,
-        ip_hash: ipHash,
+      // 기록과 조회수 증가를 한 번의 왕복으로 끝낸다. 두 번 나눠 부르면
+      // 응답 이후에 남은 시간이 모자라 뒤의 것이 잘린다 (0003 마이그레이션 참조).
+      await createAdminClient().rpc('record_access', {
+        doc_id: params.documentId,
+        viewer: params.userId,
+        act: params.action,
+        ip: ipHash,
       })
-
-      if (params.action === 'view') {
-        await admin.rpc('increment_view_count', { doc_id: params.documentId })
-      }
     } catch {
       // 기록 실패가 열람을 막아서는 안 된다.
     }
